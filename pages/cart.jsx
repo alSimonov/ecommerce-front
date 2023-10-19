@@ -80,9 +80,13 @@ export default function CartPage(){
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
+  let cartIds = [];
   useEffect(() => {
     if(cartProducts.length > 0){
-      axios.post(`/api/cart`, {ids:cartProducts}).then(response => {
+      {cartProducts.map(product => {
+        cartIds.push(product.productId);
+      })}
+      axios.post(`/api/cart`, {ids:cartIds}).then(response => {
         setProducts(response.data);
       })
     } else {
@@ -102,7 +106,7 @@ export default function CartPage(){
   }, [])
 
   function moreOfThisProduct(id){
-    addProduct(id);
+    addProduct(id, 1);
   }
   function lessOfThisProduct(id){
     removeProduct(id);
@@ -117,9 +121,8 @@ export default function CartPage(){
   }
 
   let total = 0;
-  for (const productId of cartProducts){
-    const price = products.find(p => p._id === productId)?.price || 0;
-    total += price;
+  for (const product of cartProducts){
+    total += product.price.value * product.amount;
   }
 
   if(isSuccess){
@@ -158,34 +161,35 @@ export default function CartPage(){
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map(product => (
-                    <tr key={product._id}>
+                  {cartProducts.map(product => (
+                    <tr key={product.productId}>
                       <ProductInfoCell>
                         <ProductImageBox>
-                          <img src={product.images[0]} alt="" />
+                          <img src={products.find(p => p._id === product.productId).images[0]} alt="" />
                         </ProductImageBox>
-                        {product.title}
+                        {products.find(p => p._id === product.productId).title}
                       </ProductInfoCell>
                       <td>
                         <Button 
-                          onClick={() => lessOfThisProduct(product._id)}
+                          onClick={() => lessOfThisProduct(product.productId)}
                           >-</Button>
                         <QuantityLabel>
-                          {cartProducts.filter(id => id === product._id).length}
+                          {product.amount}
                         </QuantityLabel>
                         <Button 
-                          onClick={() => moreOfThisProduct(product._id)}
+                          onClick={() => moreOfThisProduct(product.productId, product.amount, product.price)}
                           >+</Button>
                       </td>
                       <td>
-                       ${cartProducts.filter(id => id === product._id).length * product.price}
+                       ₽{product.amount * product.price.value}
+                        
                       </td>
                     </tr>
                   ))}
                     <tr>
                       <td></td>
                       <td></td>
-                      <td>${total}</td>
+                      <td>₽{total}</td>
                     </tr>
                 </tbody>
               </Table>

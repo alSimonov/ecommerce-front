@@ -60,6 +60,24 @@ export const ButtonStyle = css`
             height: 20px;
         }
     `};
+    ${props => props.size === 's' && css`
+        font-size: 1rem;
+        padding: 0px 10px;
+        svg{
+            height: 10px;
+        }
+    `}
+    
+    ${props => props.size === 'icon' && css`
+        background-color: transparent;
+        color: #fff;
+        padding: 0px 5px;
+        svg{
+            height: 20px;
+        }
+    `}
+
+
 `;
 
 const StyledButton = styled.button`

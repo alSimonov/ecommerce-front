@@ -13,7 +13,7 @@ const StyledProductsGrid = styled.div`
   }
 
 `;
-
+ 
 export default function ProductsGrid({products}) {
   return (
     <StyledProductsGrid>
