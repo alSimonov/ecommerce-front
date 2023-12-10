@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import Button from "./Button";
 import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import Input from "./Input";
 
@@ -114,7 +114,7 @@ const Price = styled.div`
   }
 `;
 
-export default function ProductBox({_id, title, description, prices, images}) {
+export default function ProductBox({_id, title, description, prices, images, properties}) {
   const {addProduct} = useContext(CartContext);
   const url = '/product/' +_id;
 
@@ -131,6 +131,8 @@ export default function ProductBox({_id, title, description, prices, images}) {
   function selectMeasure(index){
     setCurrentPrice(prices[index]);
   }
+  
+
 
   return (
     <ProductWrapper>
@@ -142,7 +144,30 @@ export default function ProductBox({_id, title, description, prices, images}) {
         <ProductInfoBox>
           <Title href={url}>{title}</Title>
 
+          {/* <Title href={url}>
+            <p>fff</p>
+            {properties?.length > 0 && Object.entries(properties)?.map(([key, value]) => (
+              // <Title href={url}>{property.name} {property.value}</Title>
+              <Title>{key} {value}</Title>
 
+
+              // <p>aaa</p>
+              
+              // console.log(property)
+
+            ))}
+          </Title> */}
+          {/* <p>{properties}</p> */}
+
+          {properties?.length > 0 && properties?.forEach((key, value) =>{
+            // <p>{key} {value}</p>
+            <p>aaa</p>
+            // console.log(key, value)
+          })}
+
+
+          {console.log(properties)}
+          
 
           <AmountRow>
             <div>
