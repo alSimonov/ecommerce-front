@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import Input from "./Input";
-
+import Rating from './Rating';
 
 const ProductWrapper = styled.div`
 
@@ -114,12 +114,26 @@ const Price = styled.div`
   }
 `;
 
-export default function ProductBox({_id, title, description, prices, images, properties}) {
+
+
+
+
+export default function ProductBox({_id, title, description, prices, images, rate, properties}) {
   const {addProduct} = useContext(CartContext);
   const url = '/product/' +_id;
 
   const [valueInput, setValueInput] = useState(1);
   const [currentPrice, setCurrentPrice] = useState(prices[0]);
+  const [nameProduct, setNameProduct] = useState("")
+
+  useEffect(() => {
+    let nameProducttxt = ""; 
+    nameProducttxt += title
+    typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
+      nameProducttxt += ` ${key}: ${value}`
+    ))
+    setNameProduct(nameProducttxt)
+  })
 
 
   function addAmount () {
@@ -133,7 +147,6 @@ export default function ProductBox({_id, title, description, prices, images, pro
   }
   
 
-
   return (
     <ProductWrapper>
       <WhiteBox >
@@ -142,32 +155,24 @@ export default function ProductBox({_id, title, description, prices, images, pro
         </ImagexBox>
 
         <ProductInfoBox>
-          <Title href={url}>{title}</Title>
+          <Title href={url}>{ nameProduct }</Title>
 
           {/* <Title href={url}>
-            <p>fff</p>
-            {properties?.length > 0 && Object.entries(properties)?.map(([key, value]) => (
-              // <Title href={url}>{property.name} {property.value}</Title>
-              <Title>{key} {value}</Title>
-
-
-              // <p>aaa</p>
-              
-              // console.log(property)
-
+            { typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
+              <p>{key}: {value}</p>
             ))}
           </Title> */}
-          {/* <p>{properties}</p> */}
-
-          {properties?.length > 0 && properties?.forEach((key, value) =>{
-            // <p>{key} {value}</p>
-            <p>aaa</p>
-            // console.log(key, value)
-          })}
 
 
-          {console.log(properties)}
-          
+
+
+
+
+          {/* {console.log( Object.entries( properties).length  )} */}
+
+          {/* { typeof properties !== 'undefined' && console.log(Object.keys(properties))} */}
+
+          <Rating />
 
           <AmountRow>
             <div>

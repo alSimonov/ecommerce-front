@@ -47,14 +47,22 @@ export default function ProductPage({product}) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>${product.price}</Price>
+                <Price>₽{product.price}</Price>
               </div>
               <div>
                 <Button $primary onClick={() => addProduct(product._id)}>
-                  <CartIcon/>Add to cart
+                  <CartIcon/>Добавить в корзину
                 </Button>    
               </div>
             </PriceRow>
+
+            <div>
+              <p>Характеристики:</p>
+              {typeof product.properties !== 'undefined' && Object.entries(product.properties).map(([key, value]) => (
+                <p>{key}: {value}</p>
+              ))}
+            </div>
+
           </div>
         </ColWrapper>
       </Center>
