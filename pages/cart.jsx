@@ -4,6 +4,7 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Table from "@/components/Table";
+import Trash from "@/components/icons/Trash";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
@@ -82,17 +83,7 @@ export default function CartPage(){
 
   let cartIds = [];
   useEffect(() => {
-    if(cartProducts.length > 0){
-      {cartProducts.map(product => {
-        cartIds.push(product.productId);
-      })}
-      axios.post(`/api/cart`, {ids:cartIds}).then(response => {
-        setProducts(response.data);
-      })
-    } else {
-      setProducts([]);
-    }
-
+    loadCartProducts();
   }, [cartProducts]);
 
   useEffect(() => {
@@ -105,12 +96,32 @@ export default function CartPage(){
     }
   }, [])
 
-  function moreOfThisProduct(id){
-    addProduct(id, 1);
+  function loadCartProducts() {
+    if(cartProducts.length > 0){
+      {cartProducts.map(product => {
+        cartIds.push(product.productId);
+      })}
+      axios.post(`/api/cart`, {ids:cartIds}).then(response => {
+        setProducts(response.data);
+      })
+    } else {
+      setProducts([]);
+    }
   }
-  function lessOfThisProduct(id){
+  
+  function moreOfThisProduct(productId, amount, price){
+    addProduct(productId, amount + 1, price);
+    loadCartProducts();
+  }
+  function lessOfThisProduct(productId, amount, price){
+    addProduct(productId, amount - 1, price);
+    loadCartProducts();
+  } 
+  function removeThisProduct(id){
     removeProduct(id);
   } 
+  
+
   async function goToPayment(){
     const response = await axios.post('/api/checkout', {
       name,email,city,postalCode,streetAddress,country,cartProducts
@@ -122,7 +133,7 @@ export default function CartPage(){
 
   let total = 0;
   for (const product of cartProducts){
-    total += product.price.value * product.amount;
+    total += product.price * product.amount;
   }
 
   if(isSuccess){
@@ -146,7 +157,7 @@ export default function CartPage(){
       <Header />
       <Center>
         <ColumnsWrapper>
-          <Box>
+          <Box id="cart">
             <h2>Корзина</h2>
             {!cartProducts?.length && (
               <div>Ваша корзина пуста</div>
@@ -158,6 +169,8 @@ export default function CartPage(){
                     <th>Продукт</th>
                     <th>Количество</th>
                     <th>Цена</th>
+                    <th></th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -171,7 +184,7 @@ export default function CartPage(){
                       </ProductInfoCell>
                       <td>
                         <Button 
-                          onClick={() => lessOfThisProduct(product.productId)}
+                          onClick={() => lessOfThisProduct(product.productId, product.amount, product.price)}
                           >-</Button>
                         <QuantityLabel>
                           {product.amount}
@@ -181,15 +194,22 @@ export default function CartPage(){
                           >+</Button>
                       </td>
                       <td>
-                       ₽{product.amount * product.price.value}
+                       ₽{product.amount * product.price}
                         
                       </td>
+                      <td>
+                        <Button onClick={() => removeThisProduct(product.productId)} $red  size="icon"><Trash /></Button>
+                      </td>
+
                     </tr>
                   ))}
                     <tr>
                       <td></td>
                       <td></td>
                       <td>₽{total}</td>
+                      <td>
+                        <Button onClick={clearCart} $red  size="icon"><Trash /></Button>
+                      </td>
                     </tr>
                 </tbody>
               </Table>

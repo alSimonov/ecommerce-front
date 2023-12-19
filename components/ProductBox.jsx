@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import Input from "./Input";
 import Rating from './Rating';
+import Test from './Test';
 
 const ProductWrapper = styled.div`
 
@@ -36,10 +37,24 @@ const ImagexBox = styled(Link)`
 
 const Title = styled(Link)`
   font-weight: normal;
-  font-size: .9rem;
+  font-size: 1.1rem;
   color: inherit;
   text-decoration: none;
   margin: 0;
+`;
+
+const Properties = styled.div`
+  display: block;
+  font-size: .9rem;
+  margin-top: 5px;
+  text-color: #ccc;
+  text-align: ;
+`;
+const Property = styled.div`
+  display: flex;
+  font-size: .85rem;
+  color: #555;
+  justify-content: space-between;
 `;
 
 const ProductInfoBox = styled.div`
@@ -114,36 +129,40 @@ const Price = styled.div`
   }
 `;
 
+ 
 
 
 
-
-export default function ProductBox({_id, title, description, prices, images, rate, properties}) {
+export default function ProductBox({_id, title, description, price, measures, images, category, rate, properties}) {
   const {addProduct} = useContext(CartContext);
   const url = '/product/' +_id;
 
-  const [valueInput, setValueInput] = useState(1);
-  const [currentPrice, setCurrentPrice] = useState(prices[0]);
-  const [nameProduct, setNameProduct] = useState("")
+  const [currentMeasure, setCurrentMeasure] = useState({ measure: "шт." , value: 1}); 
+  const [amount, setAmount] = useState(1);
+  // const [currentMeasure, setCurrentMeasure] = useState({price: price, measure: "шт"});
 
-  useEffect(() => {
-    let nameProducttxt = ""; 
-    nameProducttxt += title
-    typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
-      nameProducttxt += ` ${key}: ${value}`
-    ))
-    setNameProduct(nameProducttxt)
-  })
+  const [propertyProduct, setPropertyProduct] = useState("")
+
+  // useEffect(() => {
+  //   let propertyProducttxt = ""; 
+  //   typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
+  //     propertyProducttxt += ` ${key}: ${value} \n`
+  //   ))
+  //   setPropertyProduct(propertyProducttxt)
+  // })
 
 
   function addAmount () {
-    setValueInput(valueInput - 0 + 1);
+    setAmount( (currentMeasure.value - 0) + (amount - 0)  );
+    // setAmount(amount - 0 + 1);
+  
   }
   function lessAmount () {
-    setValueInput(valueInput === 1 ? 1 : valueInput - 1);
+    setAmount(amount <= currentMeasure.value ? currentMeasure.value : amount - currentMeasure.value);
   }
   function selectMeasure(index){
-    setCurrentPrice(prices[index]);
+    setCurrentMeasure(measures[index]);
+    setAmount(Math.round(measures[index].value));
   }
   
 
@@ -155,13 +174,15 @@ export default function ProductBox({_id, title, description, prices, images, rat
         </ImagexBox>
 
         <ProductInfoBox>
-          <Title href={url}>{ nameProduct }</Title>
+          <Title href={url}>{ title }</Title>
+          
+          <Rating />
 
-          {/* <Title href={url}>
+          <Properties >
             { typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
-              <p>{key}: {value}</p>
+              <Property><div>{key}:</div> <div>{value}</div></Property>
             ))}
-          </Title> */}
+          </Properties>
 
 
 
@@ -172,19 +193,27 @@ export default function ProductBox({_id, title, description, prices, images, rat
 
           {/* { typeof properties !== 'undefined' && console.log(Object.keys(properties))} */}
 
-          <Rating />
+
+          {/* <Property>
+            {propertyProduct}
+          </Property> */}
+
+          <Test />
+          
 
           <AmountRow>
             <div>
               <span>Кол-во:</span>
               <Button size="s" onClick={lessAmount}  >-</Button>
               <AmountInput $outlineNone type="number" min="0" 
-                onChange={ev => setValueInput(ev.target.value < 1 ? 1 : ev.target.value)} value={valueInput} />
+                onChange={ev => setAmount(ev.target.value < 1 ? 1 : ev.target.value)} value={amount} />
               <Button size="s" onClick={addAmount} >+</Button>
             </div>
             <MeasureBlock>
-              {prices?.length > 0 && prices?.map((price, index) => (
-                <MeasureButton size="s" $selected={currentPrice.measure === price.measure ? true : false} onClick={() =>  selectMeasure(index)} >{price.measure}</MeasureButton>
+              {measures?.length > 0 && measures?.map((measure, index) => (
+                <MeasureButton size="s" $selected={currentMeasure.measure === measure.measure ? true : false} onClick={() =>  selectMeasure(index)} >{measure.measure}</MeasureButton>
+                // <MeasureButton size="s" onClick={() =>  selectMeasure(index)} >{price}</MeasureButton>
+              
               ))}
               
             </MeasureBlock>
@@ -193,9 +222,11 @@ export default function ProductBox({_id, title, description, prices, images, rat
 
           <PriceRow>
             <Price>
-              от {currentPrice.value} руб./{currentPrice.measure}
+              {/* от {currentPrice.value} руб./{currentPrice.measure} */}
+              от {price * amount} руб.
+
             </Price>
-            <Button $block onClick={() => addProduct(_id, valueInput, currentPrice)} $primary $outline>
+            <Button $block onClick={() => addProduct(_id, amount, price)} $primary $outline>
               В корзину
             </Button>
           </PriceRow>

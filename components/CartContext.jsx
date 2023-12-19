@@ -16,7 +16,9 @@ export function CartContextProvider({children}) {
     }
   }, [])
   function addProduct(productId, amount, price) {
-    const indexOfProduct = cartProducts.indexOf(p => p.productId === productId);
+    const indexOfProduct = cartProducts.findIndex(p => p.productId === productId);
+    // const indexOfProduct = cartProducts.map(e => e.productId).indexOf(productId);
+
     if(indexOfProduct > -1) {
       cartProducts[indexOfProduct] = {productId, amount, price};
     }
@@ -24,9 +26,11 @@ export function CartContextProvider({children}) {
       setCartProducts(prev => [...prev, {productId, amount, price}]);
     }
   }
+  
   function removeProduct(productId) {
     setCartProducts(prev => {
-      const pos = prev.indexOf(productId);
+      const pos = cartProducts.map(e => e.productId).indexOf(productId);
+
       if(pos!== -1) {
         return prev.filter((value, index) => index!== pos);
       }

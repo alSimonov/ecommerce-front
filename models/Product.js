@@ -4,7 +4,8 @@ import mongoose, { Schema, model, models } from "mongoose";
 const ProductSchema = new Schema({
   title: {type:String, required:true},
   description: String,
-  prices: {type: Object, required: true},
+  price: {type: Number, required: true},
+	measures: {type: Object}, 
   images: [{type:String}],
   category: {type:mongoose.Schema.Types.ObjectId, ref:'Category'},
   properties: {type:Object},

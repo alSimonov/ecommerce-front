@@ -68,14 +68,25 @@ export const ButtonStyle = css`
         }
     `}
     
-    ${props => props.size === 'icon' && css`
+    ${props => props.size === 'icon' && props.$white && css`
         background-color: transparent;
         color: #fff;
+
         padding: 0px 5px;
         svg{
             height: 20px;
         }
     `}
+
+    ${props => props.size === 'icon' && props.$red && css`
+    background-color: transparent;
+    color: #f00;
+
+    padding: 0px 5px;
+    svg{
+        height: 20px;
+    }
+`}
 
 
 `;

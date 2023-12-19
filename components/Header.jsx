@@ -143,7 +143,7 @@ export default function Header() {
             </DropDown>
             <NavLink href={'/account'}>Аккаунты</NavLink>
             <NavLink href={'/cart'}>Корзина ({cartProducts.length})</NavLink>
-            <Button onClick={clearCart} size="icon"><Trash /></Button>
+            <Button onClick={clearCart} $white size="icon"><Trash /></Button>
           </StyledNav>
           <NavButton onClick={() => setMobileNavAcive(prev => !prev)}>
             <BarsIcon />
