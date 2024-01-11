@@ -41,14 +41,14 @@ const ProductInfoBox = styled.div`
   margin-top: 5px;
   text-align: center;
 `;
+ 
 
 
 
-
-export default function CategoryBox({ _id, name, images}) {
+export default function CategoryBox({ _id, name, images, parent}) {
   
 
-  const url = '/category/' +_id;
+  const url = `/category/${_id}?parent=${parent}`;
   return (
     <ProductWrapper>
       <WhiteBox href={url}>

@@ -6,3 +6,5 @@ export default function Trash({className="w-5 h-5"}){
 
   );
 }
+
+

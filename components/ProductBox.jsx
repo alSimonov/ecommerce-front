@@ -180,7 +180,7 @@ export default function ProductBox({_id, title, description, price, measures, im
 
           <Properties >
             { typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
-              <Property><div>{key}:</div> <div>{value}</div></Property>
+              <Property ><div>{key}:</div> <div>{value}</div></Property>
             ))}
           </Properties>
 

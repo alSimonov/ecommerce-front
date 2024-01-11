@@ -27,7 +27,7 @@ const Rate = () => {
 			{[...Array(5)].map((item, index) => {
 				const givenRating = index + 1;
 				return (
-					<label>
+					<label key={index}>
 						<Radio
 							type="radio"
 							value={givenRating}

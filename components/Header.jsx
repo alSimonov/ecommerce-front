@@ -136,7 +136,7 @@ export default function Header() {
               <DropDownContent>
                 {categories?.length > 0 && categories.map(category => ( 
                   !category.parent &&
-                  <NavLink href={'/categories/'+category._id} >{category.name}</NavLink>
+                  <NavLink key={category._id} href={'/categories/'+category._id} >{category.name}</NavLink>
                 ))}
 
               </DropDownContent>

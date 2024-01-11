@@ -77,11 +77,11 @@ export default function Featured({product}) {
 							<Desc>{product.description}</Desc>
 							<ButtonsWrapper>
 								<ButtonLink href={'/product/'+product._id} $outline={1} $white={1} >
-									Read more
+									Подробнее
 								</ButtonLink>
 								<Button $white  onClick={addFeaturedToCart}>
 									<CartIcon />
-									Add to cart
+									В корзину
 								</Button>
 							</ButtonsWrapper>
 						</div>

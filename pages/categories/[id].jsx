@@ -45,12 +45,12 @@ export default function CategoriesPage() {
   //     setCategories(result.data);
   //   });
   // }
-
+ 
   return (
     <>
       <Header />
       <Center>
-        <Title>Категории</Title>
+        <Title>Категории</Title> 
         <CategoriesGrid categories={categories}/>
       </Center>
     </>
