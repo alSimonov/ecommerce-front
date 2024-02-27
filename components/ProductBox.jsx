@@ -198,7 +198,7 @@ export default function ProductBox({_id, title, description, price, measures, im
             {propertyProduct}
           </Property> */}
 
-          <Test />
+          {/* <Test /> */}
           
 
           <AmountRow>

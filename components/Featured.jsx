@@ -22,7 +22,8 @@ const Title = styled.h1`
 `;
 const Desc = styled.p`
 	color: #aaa;
-	font-size: .8rem;
+	font-size: .9rem;
+
 `;
 const ColumnsWrapper = styled.div`
 	display: grid;
@@ -87,7 +88,9 @@ export default function Featured({product}) {
 						</div>
 					</Column>
 					<Column>
-						<img src="https://res.cloudinary.com/dbzdjqnvx/image/upload/v1696501591/products/phfujfvjazkpfix6krrm.jpg" alt="" />
+
+						{/* <img src="https://res.cloudinary.com/dbzdjqnvx/image/upload/v1696501591/products/phfujfvjazkpfix6krrm.jpg" alt="" /> */}
+						<img src={product.images?.[0]} alt={product.title} />
 					</Column>
 				</ColumnsWrapper>
 			</Center>
