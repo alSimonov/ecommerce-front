@@ -1,3 +1,4 @@
+
 const { createContext, useState, useEffect } = require("react");
 
 export const CartContext = createContext({});
@@ -15,24 +16,39 @@ export function CartContextProvider({children}) {
       setCartProducts(JSON.parse(ls.getItem("cart")));
     }
   }, [])
-  function addProduct(productId, amount, price) {
+  
+  function addProduct(productId, amountNew, price) {
     const indexOfProduct = cartProducts.findIndex(p => p.productId === productId);
     // const indexOfProduct = cartProducts.map(e => e.productId).indexOf(productId);
 
+    // console.log(cartProducts);
     if(indexOfProduct > -1) {
-      cartProducts[indexOfProduct] = {productId, amount, price};
+      const amount = cartProducts[indexOfProduct].amount;
+      
+      const allAmount = (amount - 0) + (amountNew - 0);
+
+      console.log(allAmount);
+
+      if(allAmount > 0) {
+        cartProducts[indexOfProduct] = {productId, amount: allAmount, price};
+      }
+      else{
+        removeProduct(productId);
+        console.log(cartProducts);
+
+      }
+
     }
     else {
-      setCartProducts(prev => [...prev, {productId, amount, price}]);
+      setCartProducts(prev => [...prev, {productId, amount: amountNew, price}]);
     }
   }
   
   function removeProduct(productId) {
     setCartProducts(prev => {
       const pos = cartProducts.map(e => e.productId).indexOf(productId);
-
       if(pos!== -1) {
-        return prev.filter((value, index) => index!== pos);
+          return prev.filter((value, index) => index!== pos);
       }
       return prev;
     });

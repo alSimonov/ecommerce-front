@@ -23,6 +23,7 @@ const Title = styled.h1`
 const Desc = styled.p`
 	color: #aaa;
 	font-size: .9rem;
+	text-align: justify;
 
 `;
 const ColumnsWrapper = styled.div`

@@ -47,6 +47,12 @@ export const ButtonStyle = css`
         color: #fff;
 
     `};
+    ${props => props.$primary && props.$light && !props.$outline  && css`
+        background-color: #fff;
+        border: 1px solid ${primary};
+        color: ${primary};
+
+    `};
     ${props => props.$primary && props.$outline && css`
         background-color: transparent;
         border: 1px solid ${primary};

@@ -90,7 +90,7 @@ export default function CartPage(){
     if(typeof window === 'undefined') {
       return;
     }
-    if( window?.location.href.includes('success')){
+    if(window?.location.href.includes('success')){
       setIsSuccess(true);
       clearCart();
     }
@@ -109,12 +109,12 @@ export default function CartPage(){
     }
   }
   
-  function moreOfThisProduct(productId, amount, price){
-    addProduct(productId, amount + 1, price);
+  function moreOfThisProduct(productId, price){
+    addProduct(productId, 1, price);
     loadCartProducts();
   }
-  function lessOfThisProduct(productId, amount, price){
-    addProduct(productId, amount - 1, price);
+  function lessOfThisProduct(productId, price){
+    addProduct(productId, -1, price);
     loadCartProducts();
   } 
   function removeThisProduct(id){
@@ -178,20 +178,32 @@ export default function CartPage(){
                     <tr key={product.productId}>
                       <ProductInfoCell>
                         <ProductImageBox>
-                          <img src={products.find(p => p._id === product.productId).images[0]} alt="" />
+                          <img src={products.find(p => p._id === product.productId)?.images[0]} alt="" />
                         </ProductImageBox>
-                        {products.find(p => p._id === product.productId).title}
+                        {products.find(p => p._id === product.productId)?.title}
                       </ProductInfoCell>
                       <td>
-                        <Button 
-                          onClick={() => lessOfThisProduct(product.productId, product.amount, product.price)}
-                          >-</Button>
+
+                        {product.amount !== 1 ? (
+                          <Button onClick={() => lessOfThisProduct(product.productId, product.price)}  $primary $light 
+                            >
+                              -
+                            </Button>
+                        ):(
+                          <Button > 
+                            - 
+                          </Button>
+                        ) 
+                      
+                        }
+              
                         <QuantityLabel>
                           {product.amount}
                         </QuantityLabel>
-                        <Button 
-                          onClick={() => moreOfThisProduct(product.productId, product.amount, product.price)}
-                          >+</Button>
+                        <Button  onClick={() => moreOfThisProduct(product.productId, product.price)} $primary $light 
+                          >
+                            +
+                          </Button>
                       </td>
                       <td>
                        ₽{product.amount * product.price}

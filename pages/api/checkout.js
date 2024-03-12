@@ -12,24 +12,50 @@ export default async function handler(req, res) {
 
   const {name, email, city, postalCode, streetAddress, country, cartProducts} = req.body;
   await mongooseConnect();
-  const productsIds = cartProducts;
-  console.log(productsIds);
+  // const productsIds = cartProducts;
+  // console.log(productsIds);
   
-  const uniqueIds = [...new Set(productsIds)];
-  const productsInfos = await Product.find({_id: uniqueIds});
+  // const uniqueIds = [...new Set(productsIds)];
+
+  // const {productId} = cartProducts;
+   
+
   
 
+  // const productsInfos = await Product.find({_id: cartProducts.productId});
+  
+
+
   let line_items = [];
-  for (const productId of uniqueIds) {
-    const productInfo = productsInfos.find(p => p._id.toString() === productId);
-    const quantity = productsIds.filter(id => id === productId).length || 0;
+  for (const product of cartProducts) {
+
+
+    console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ product.productId");
+    console.log(product.productId);
+    console.log(typeof product.productId);
+    console.log("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ product.productId end ");
+
+
+    // const productInfo = Product.find(p => p._id.toString() === product.productId);
+    const productInfo = await Product.findById({_id: product.productId});
+    // const quantity = productsIds.filter(id => id === productId).length || 0;
+    // const {amount, price} = cartProducts.find(p => p.productId === productId);
+    // const {amount} = product;
+
+
+    const quantity = product.amount;
+    // const unit_amount = product.amount * product.price * 100;
+    const unit_amount = product.price * 100;
+
+
+    
     if(quantity > 0 && productInfo) {
       line_items.push({
         quantity, 
         price_data: {
-          currency: 'USD',
+          currency: 'RUB',
           product_data: {name: productInfo.title},
-          unit_amount: quantity * productInfo.price * 100,
+          unit_amount:  unit_amount,
         }
       });
     }
@@ -49,6 +75,8 @@ export default async function handler(req, res) {
     cancel_url: process.env.PUBLIC_URL + '/cart?canceled=1',
     metadata: {orderId: orderDoc._id.toString(), test: 'ok'}
    });
+
+  
 
    res.json({
     url: session.url,

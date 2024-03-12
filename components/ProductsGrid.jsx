@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import ProductBox from "./ProductBox";
+import { Category } from "@/models/Category";
 
 
 const StyledProductsGrid = styled.div`
@@ -15,9 +16,11 @@ const StyledProductsGrid = styled.div`
 `;
  
 export default function ProductsGrid({products}) {
+
   return (
     <StyledProductsGrid>
       {products?.length > 0 && products.map((product) => (
+
         <ProductBox key={product._id} {...product} />
       ))}
     </StyledProductsGrid>

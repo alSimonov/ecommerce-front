@@ -7,6 +7,7 @@ import { CartContext } from "./CartContext";
 import Input from "./Input";
 import Rating from './Rating';
 import Test from './Test';
+import { Category } from "@/models/Category";
 
 const ProductWrapper = styled.div`
 
@@ -130,11 +131,15 @@ const Price = styled.div`
 `;
 
  
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 2px;
 
+`;
 
 
 export default function ProductBox({_id, title, description, price, measures, images, category, rate, properties}) {
-  const {addProduct} = useContext(CartContext);
+  const {addProduct, cartProducts} = useContext(CartContext);
   const url = '/product/' +_id;
 
   const [currentMeasure, setCurrentMeasure] = useState({ measure: "шт." , value: 1}); 
@@ -142,6 +147,12 @@ export default function ProductBox({_id, title, description, price, measures, im
   // const [currentMeasure, setCurrentMeasure] = useState({price: price, measure: "шт"});
 
   const [propertyProduct, setPropertyProduct] = useState("")
+
+  // console.log(category);
+
+  // const categoryObj = await Category.findById(category);
+
+  // console.log(categoryObj);
 
   // useEffect(() => {
   //   let propertyProducttxt = ""; 
@@ -151,6 +162,15 @@ export default function ProductBox({_id, title, description, price, measures, im
   //   setPropertyProduct(propertyProducttxt)
   // })
 
+  // useEffect(() => {
+  //   loadCartProducts();
+  // }, [cartProducts]);
+
+
+
+  // function loadCart(){
+
+  // }
 
   function addAmount () {
     setAmount( (currentMeasure.value - 0) + (amount - 0)  );
@@ -164,6 +184,11 @@ export default function ProductBox({_id, title, description, price, measures, im
     setCurrentMeasure(measures[index]);
     setAmount(Math.round(measures[index].value));
   }
+  function addProductToCart(id, amount, price){
+    addProduct(id, amount, price)
+    // loadCart();
+  }
+
   
 
   return (
@@ -226,9 +251,37 @@ export default function ProductBox({_id, title, description, price, measures, im
               от {price * amount} руб.
 
             </Price>
-            <Button $block onClick={() => addProduct(_id, amount, price)} $primary $outline>
-              В корзину
-            </Button>
+
+
+                  
+              {cartProducts?.length > 0 && cartProducts.map(pr => pr.productId).includes(_id) ? (
+           
+                <ButtonRow>
+
+
+                  <Button $block onClick={() => addProductToCart(_id, amount, price)} $primary >
+                      Добавить еще                 
+                  </Button>
+                  
+
+                  <Button  $primary $outline  onClick={() => location.href='/cart'}>
+                    <CartIcon />
+                    ({cartProducts.find(pr => pr.productId === _id).amount})
+                  </Button>
+
+                      
+                </ButtonRow> 
+                  
+                  )
+                  :
+                (
+                  <Button $block onClick={() => addProductToCart(_id, amount, price)} $primary $outline>
+                    В корзину                
+                  </Button>                
+                  )
+                }   
+
+          
           </PriceRow>
         </ProductInfoBox>
       </WhiteBox>
