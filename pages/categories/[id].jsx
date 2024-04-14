@@ -1,6 +1,7 @@
 import CategoriesGrid from "@/components/CategoriesGrid";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import Title from "@/components/Title";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Category } from "@/models/Category";
@@ -48,11 +49,12 @@ export default function CategoriesPage() {
  
   return (
     <>
-      <Header />
-      <Center>
-        <Title>Категории</Title> 
-        <CategoriesGrid categories={categories}/>
-      </Center>
+      <Layout>
+        <Center>
+          <Title>Категории</Title> 
+          <CategoriesGrid categories={categories}/>
+        </Center>
+      </Layout>
     </>
   );
 }

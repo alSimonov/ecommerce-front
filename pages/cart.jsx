@@ -3,6 +3,7 @@ import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import Layout from "@/components/Layout";
 import Table from "@/components/Table";
 import Trash from "@/components/icons/Trash";
 import axios from "axios";
@@ -139,113 +140,115 @@ export default function CartPage(){
   if(isSuccess){
     return (
       <>
-        <Header />
-        <Center>
-          <ColumnsWrapper>
-            <Box>
-              <h1>Спасибо за покупку!</h1>
-              <p>Мы пришлем письмо на почту, когда заказ будет отправлен.</p>
-            </Box>
-          </ColumnsWrapper>
-        </Center>
+        <Layout>
+          <Center>
+            <ColumnsWrapper>
+              <Box>
+                <h1>Спасибо за покупку!</h1>
+                <p>Мы пришлем письмо на почту, когда заказ будет отправлен.</p>
+              </Box>
+            </ColumnsWrapper>
+          </Center>
+        </Layout>
       </>
     );
   }
 
   return (
     <>
-      <Header />
-      <Center>
-        <ColumnsWrapper>
-          <Box id="cart">
-            <h2>Корзина</h2>
-            {!cartProducts?.length && (
-              <div>Ваша корзина пуста</div>
-            )}
-            {products?.length > 0 && (
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Продукт</th>
-                    <th>Количество</th>
-                    <th>Цена</th>
-                    <th></th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartProducts.map(product => (
-                    <tr key={product.productId}>
-                      <ProductInfoCell>
-                        <ProductImageBox>
-                          <img src={products.find(p => p._id === product.productId)?.images[0]} alt="" />
-                        </ProductImageBox>
-                        {products.find(p => p._id === product.productId)?.title}
-                      </ProductInfoCell>
-                      <td>
-
-                        {product.amount !== 1 ? (
-                          <Button onClick={() => lessOfThisProduct(product.productId, product.price)}  $primary $light 
-                            >
-                              -
-                            </Button>
-                        ):(
-                          <Button > 
-                            - 
-                          </Button>
-                        ) 
-                      
-                        }
-              
-                        <QuantityLabel>
-                          {product.amount}
-                        </QuantityLabel>
-                        <Button  onClick={() => moreOfThisProduct(product.productId, product.price)} $primary $light 
-                          >
-                            +
-                          </Button>
-                      </td>
-                      <td>
-                       ₽{product.amount * product.price}
-                        
-                      </td>
-                      <td>
-                        <Button onClick={() => removeThisProduct(product.productId)} $red  size="icon"><Trash /></Button>
-                      </td>
-
-                    </tr>
-                  ))}
+      <Layout>
+        <Center>
+          <ColumnsWrapper>
+            <Box id="cart">
+              <h2>Корзина</h2>
+              {!cartProducts?.length && (
+                <div>Ваша корзина пуста</div>
+              )}
+              {products?.length > 0 && (
+                <Table>
+                  <thead>
                     <tr>
-                      <td></td>
-                      <td></td>
-                      <td>₽{total}</td>
-                      <td>
-                        <Button onClick={clearCart} $red  size="icon"><Trash /></Button>
-                      </td>
+                      <th>Продукт</th>
+                      <th>Количество</th>
+                      <th>Цена</th>
+                      <th></th>
+                      
                     </tr>
-                </tbody>
-              </Table>
-            )}
-          </Box>
-          {!!cartProducts?.length && (
-            <Box>
-              <h2>Информация заказа</h2>
-              
-              <Input type="text" placeholder="Имя" value={name} name="name" onChange={ev => setName(ev.target.value)}/>
-              <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
-              <CityHolder>
-                <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
-                <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
-              </CityHolder>
-              <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => setStreetAddress(ev.target.value)}/>
-              <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
-              
-              <Button $black $block onClick={goToPayment} >Продолжить оплату</Button>
-            
+                  </thead>
+                  <tbody>
+                    {cartProducts.map(product => (
+                      <tr key={product.productId}>
+                        <ProductInfoCell>
+                          <ProductImageBox>
+                            <img src={products.find(p => p._id === product.productId)?.images[0]} alt="" />
+                          </ProductImageBox>
+                          {products.find(p => p._id === product.productId)?.title}
+                        </ProductInfoCell>
+                        <td>
+
+                          {product.amount !== 1 ? (
+                            <Button onClick={() => lessOfThisProduct(product.productId, product.price)}  $primary $light 
+                              >
+                                -
+                              </Button>
+                          ):(
+                            <Button > 
+                              - 
+                            </Button>
+                          ) 
+                        
+                          }
+                
+                          <QuantityLabel>
+                            {product.amount}
+                          </QuantityLabel>
+                          <Button  onClick={() => moreOfThisProduct(product.productId, product.price)} $primary $light 
+                            >
+                              +
+                            </Button>
+                        </td>
+                        <td>
+                        ₽{product.amount * product.price}
+                          
+                        </td>
+                        <td>
+                          <Button onClick={() => removeThisProduct(product.productId)} $red  size="icon"><Trash /></Button>
+                        </td>
+
+                      </tr>
+                    ))}
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td>₽{total}</td>
+                        <td>
+                          <Button onClick={clearCart} $red  size="icon"><Trash /></Button>
+                        </td>
+                      </tr>
+                  </tbody>
+                </Table>
+              )}
             </Box>
-          )}
-        </ColumnsWrapper>
-      </Center>
+            {!!cartProducts?.length && (
+              <Box>
+                <h2>Информация заказа</h2>
+                
+                <Input type="text" placeholder="Имя" value={name} name="name" onChange={ev => setName(ev.target.value)}/>
+                <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+                <CityHolder>
+                  <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
+                  <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
+                </CityHolder>
+                <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => setStreetAddress(ev.target.value)}/>
+                <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
+                
+                <Button $black $block onClick={goToPayment} >Продолжить оплату</Button>
+              
+              </Box>
+            )}
+          </ColumnsWrapper>
+        </Center>
+      </Layout>
     </>
   );
 }

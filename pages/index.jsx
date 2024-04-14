@@ -1,17 +1,21 @@
 import Featured from "@/components/Featured";
 import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import NewProducts from "@/components/NewProducts";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
+import { useSession } from "next-auth/react";
+
 
 
 export default function HomePage({featuredProduct, newProducts}) {
+  
+
   return (
-    <div>
-      <Header />
+    <Layout>
       <Featured product={featuredProduct}/>
       <NewProducts products={newProducts}/>
-    </div>
+    </Layout>
   );
 }
 

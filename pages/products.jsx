@@ -1,5 +1,6 @@
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import Layout from "@/components/Layout";
 import ProductsGrid from "@/components/ProductsGrid";
 import Title from "@/components/Title";
 import { mongooseConnect } from "@/lib/mongoose";
@@ -10,11 +11,12 @@ import styled from "styled-components";
 export default function ProductsPage({products}){
   return (
     <>
-      <Header />
-      <Center>
-        <Title>All products</Title>
-        <ProductsGrid products={products}/>
-      </Center>
+      <Layout>
+        <Center>
+          <Title>All products</Title>
+          <ProductsGrid products={products}/>
+        </Center>
+      </Layout>
     </>
   );
 }

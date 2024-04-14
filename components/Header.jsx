@@ -9,6 +9,10 @@ import { Category } from "@/models/Category";
 import axios from "axios";
 import Trash from "./icons/Trash";
 import Button from "./Button";
+import User from "./icons/user";
+import IconLogout from "./icons/IconLogout";
+import { useSession, signIn, signOut } from "next-auth/react";
+
 
 const StyledHeader = styled.header`
   background-color: #222;
@@ -123,6 +127,14 @@ export default function Header() {
     });
   }
 
+  
+  async function logout(){
+    // await router.push('/');
+    await signOut();
+  }
+
+
+
   return(
     <StyledHeader>
       <Center>
@@ -141,9 +153,11 @@ export default function Header() {
 
               </DropDownContent>
             </DropDown>
-            <NavLink href={'/account'}>Аккаунты</NavLink>
-            <NavLink href={'/cart'}>Корзина ({cartProducts.length})</NavLink>
+            <NavLink href={'/account'}>  Аккаунт</NavLink> 
+            <NavLink href={'/cart'}>  Корзина ({cartProducts.length})</NavLink>
             <Button onClick={clearCart} $white size="icon"><Trash /></Button>
+            <Button onClick={logout} ><IconLogout/></Button>
+
           </StyledNav>
           <NavButton onClick={() => setMobileNavAcive(prev => !prev)}>
             <BarsIcon />

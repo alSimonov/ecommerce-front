@@ -146,7 +146,7 @@ export default function ProductBox({_id, title, description, price, measures, im
   const [amount, setAmount] = useState(1);
   // const [currentMeasure, setCurrentMeasure] = useState({price: price, measure: "шт"});
 
-  const [propertyProduct, setPropertyProduct] = useState("")
+  const [propertyProduct, setPropertyProduct] = useState("");
 
   // console.log(category);
 
@@ -205,7 +205,7 @@ export default function ProductBox({_id, title, description, price, measures, im
 
           <Properties >
             { typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (
-              <Property ><div>{key}:</div> <div>{value}</div></Property>
+              <Property key={key} ><div>{key}:</div> <div>{value}</div></Property>
             ))}
           </Properties>
 
@@ -236,7 +236,7 @@ export default function ProductBox({_id, title, description, price, measures, im
             </div>
             <MeasureBlock>
               {measures?.length > 0 && measures?.map((measure, index) => (
-                <MeasureButton size="s" $selected={currentMeasure.measure === measure.measure ? true : false} onClick={() =>  selectMeasure(index)} >{measure.measure}</MeasureButton>
+                <MeasureButton key={index} size="s" $selected={currentMeasure.measure === measure.measure ? true : false} onClick={() =>  selectMeasure(index)} >{measure.measure}</MeasureButton>
                 // <MeasureButton size="s" onClick={() =>  selectMeasure(index)} >{price}</MeasureButton>
               
               ))}
