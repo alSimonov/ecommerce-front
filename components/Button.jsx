@@ -15,6 +15,11 @@ export const ButtonStyle = css`
     font-weight: 500;
     font-family: 'Poppins', sans-serif;
 
+
+    &:hover {
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      }
+
     svg{
         height: 16px;
         margin-right: 5px; 

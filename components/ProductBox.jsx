@@ -8,6 +8,7 @@ import Input from "./Input";
 import Rating from './Rating';
 import Test from './Test';
 import { Category } from "@/models/Category";
+import Trash from "./icons/Trash";
 
 const ProductWrapper = styled.div`
 
@@ -137,15 +138,27 @@ const ButtonRow = styled.div`
 
 `;
 
+const ButtonTrash = styled(Button)`
+  padding: 4px;
+  padding-left: 10px;
+  color: red;
+  background-color: white;
+
+
+
+
+`;
+
 
 export default function ProductBox({_id, title, description, price, measures, images, category, rate, properties}) {
-  const {addProduct, cartProducts} = useContext(CartContext);
+  const {addProduct, cartProducts, removeProduct} = useContext(CartContext);
   const url = '/product/' +_id;
 
   const [currentMeasure, setCurrentMeasure] = useState({ measure: "шт." , value: 1}); 
   const [amount, setAmount] = useState(1);
   // const [currentMeasure, setCurrentMeasure] = useState({price: price, measure: "шт"});
 
+  const [cartProductsTemp, setCartProductsTemp] = useState(cartProducts);
   const [propertyProduct, setPropertyProduct] = useState("");
 
   // console.log(category);
@@ -163,7 +176,7 @@ export default function ProductBox({_id, title, description, price, measures, im
   // })
 
   // useEffect(() => {
-  //   loadCartProducts();
+  //   setCurrentMeasure(cartProducts);
   // }, [cartProducts]);
 
 
@@ -259,8 +272,9 @@ export default function ProductBox({_id, title, description, price, measures, im
                 <ButtonRow>
 
 
+
                   <Button $block onClick={() => addProductToCart(_id, amount, price)} $primary >
-                      Добавить еще                 
+                      Добавить                
                   </Button>
                   
 
@@ -269,6 +283,9 @@ export default function ProductBox({_id, title, description, price, measures, im
                     ({cartProducts.find(pr => pr.productId === _id).amount})
                   </Button>
 
+                  <ButtonTrash $block onClick={() => removeProduct(_id)} $primary $outline >
+                      <Trash/>                
+                  </ButtonTrash>
                       
                 </ButtonRow> 
                   

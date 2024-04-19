@@ -2,17 +2,60 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IconYandex from "@/components/icons/IconYandex";
 import Button from "@/components/Button";
+import Layout from "@/components/Layout";
+import Input from "@/components/Input";
+import Link from "next/link";
+import axios from "axios";
 
 
 
 
 const Wrapper = styled.div`
+  // display: flex;
+  margin-top: 50px;
+
+
+  padding: 10px;
+
+  background-color: #fff;
+  border-radius: 10px;
+  width: 500px;
+
+
+
+  text-align: center;
+  justify-content: center;
+
+  box-shadow: 0px 0px 5px #bbb;
+
+
+
+  
+`;
+
+const WrapperMainForm = styled.div`
   padding-top: 50px;
   display: flex;
   gap: 50px;
+`;
+
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+
+
+`;
+
+const LinkReg = styled(Link)`
+  matgin: 50px;
+  text-decoration: none;
 `;
 
 const WhiteBoxSide = styled.div`
@@ -30,6 +73,10 @@ const WhiteBoxSide = styled.div`
     max-height: 100px;
   }
 
+`;
+
+const InputWrapper = styled.div`
+  margin: 10px 25px;
 `;
 
 const Avatar = styled.div`
@@ -94,33 +141,149 @@ const Row = styled.div`
   gap: 10px;
 `;
 
+const CenterCenter = styled.div`
+  display: flex;
+  justify-content: center;
+  
 
-const ButtonSign = styled(Button)`
-  background-color: #ccc;
+
+`;
+
+const Title = styled.div`
+  text-align: center;
+  font-size: 1.2em;
+
+`;
+
+const ButtonDes = styled(Button)`
+  margin: 5px 0;
 `;
 
 
+
+
+// const ButtonSign = styled(Button)`
+//   background-color: #ccc;
+// `;
+
+
 // const { data: session } = useSession();
-const session = false;
+// const session = false;
+
+
+
+
 
 export default function Account(){
+
+  const [session, setSession] = useState(false);
+
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [clientAccountObj, setClientAccountObj] = useState({});
+  
+  const [FI, setFI] = useState("");
+
+
+
+
+  useEffect(() => {
+		
+    CheckAccount(clientAccountObj);
+    
+ 
+	}, [clientAccountObj]) 
+
+  
+
+
+  async function SignInAccount(){
+
+    axios.get('/api/clientAccount?email='+email).then(response => {
+      setClientAccountObj(response.data);
+    });
+    
+  }
+
+
+
+  function CheckAccount(clientAccountObj){
+    if(clientAccountObj.password === password){
+      setSession(true);
+
+      setFI(clientAccountObj.name.substr(0,1) + clientAccountObj.surname.substr(0,1));
+
+    }
+  }
+ 
+
+  function changeSession(){
+    setSession(!session );
+  }
+
+  function exit(){
+    setSession();
+  }
+ 
+
 
   if(!session){
     return (
       <>
-        <Header/>
-        <Center>
-          <Wrapper>
 
-            Авторизация
+        <Layout>
+          <CenterCenter>
+            <Wrapper>
 
-            <ButtonSign onclick={() => signIn('yandex')} >
-              <IconYandex/> 
-              Авторизоваться
-            </ButtonSign>
-          
-          </Wrapper>
-        </Center>
+
+
+                <Title>
+                  Авторизация
+                </Title>
+
+                <InputWrapper>
+                  <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+                  <Input type="text" placeholder="Пароль" value={password} name="password" onChange={ev => setPassword(ev.target.value)}/>
+                </InputWrapper>
+
+                <ButtonWrapper>
+                  <Button $primary onClick={SignInAccount}>
+                    Войти
+                  </Button>
+                
+
+                  
+                  <LinkReg href={"/registration"} >
+                    Регистрация
+                  </LinkReg>
+
+                </ButtonWrapper>
+
+
+
+
+              
+            
+
+              {/* <ButtonSign onclick={() => signIn('yandex')} >
+                <IconYandex/> 
+                Авторизоваться
+              </ButtonSign> */}
+            
+
+
+              
+
+            </Wrapper>
+          </CenterCenter>
+
+            <Button $primary onClick={changeSession}>
+              fff
+            </Button>
+
+        </Layout>
       </>
     );
 
@@ -128,61 +291,73 @@ export default function Account(){
 
   return(
     <>
-      <Header/>
+      <Layout>
+        <Center>
+          <WrapperMainForm>
+            <WhiteBoxSide>
 
-      <Center>
-        <Wrapper>
-          <WhiteBoxSide>
-
-            <Avatar>
-              ИФ
-            </Avatar>
-
-
-            <Name>
-              Иван <br />Фролов
-            </Name>        
-
-            Изменить профиль
-
-            Выйти  
-
-          </WhiteBoxSide>
-        
-
-          <WhiteBoxMain>
-            Мои данные
-
-            <Row>
-              <WhiteBox>
-                Мои заказы
-              </WhiteBox>
-              <WhiteBox>
-                Мои отзывы
-              </WhiteBox>
-              <WhiteBox>
-                Мои баллы
-              </WhiteBox>
-            </Row>
-
-            Сервис и помощь
-
-            <Row>
-              <WhiteBox>
-                Как оплатить товар
-              </WhiteBox>
-              <WhiteBox>
-                Как отменить заказ
-              </WhiteBox>
-            </Row>
+              <Avatar>
+                {FI}
+              </Avatar>
 
 
+              <Name>
+                {clientAccountObj.name} <br /> {clientAccountObj.surname}
+              </Name>        
 
-          </WhiteBoxMain>
-        
-        
-        </Wrapper>
-      </Center>
+
+              <ButtonDes onClick>
+                Изменить профиль  
+              </ButtonDes >
+             
+              <ButtonDes onClick={exit}>
+                Выйти  
+              </ButtonDes>
+              
+
+            </WhiteBoxSide>
+          
+
+            <WhiteBoxMain>
+              Мои данные
+
+              <Row>
+                <WhiteBox>
+                  Мои заказы
+                </WhiteBox>
+                <WhiteBox>
+                  Мои отзывы
+                </WhiteBox>
+                <WhiteBox>
+                  Мои баллы
+                </WhiteBox>
+              </Row>
+
+              Сервис и помощь
+
+              <Row>
+                <WhiteBox>
+                  Как оплатить товар
+                </WhiteBox>
+                <WhiteBox>
+                  Как отменить заказ
+                </WhiteBox>
+              </Row>
+
+
+
+            </WhiteBoxMain>
+          
+          
+          </WrapperMainForm>
+        </Center>
+
+        <Button $primary onClick={changeSession}>
+                fff
+        </Button>
+
+      </Layout>
+
 
       
     

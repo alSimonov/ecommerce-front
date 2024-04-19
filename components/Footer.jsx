@@ -25,6 +25,7 @@ const Wraper = styled.div`
 
 const NavLink = styled(Link)`
   color: #fff;
+  text-decoration: none;
 `;
 
 export default function Footer() {

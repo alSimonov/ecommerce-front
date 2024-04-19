@@ -1,4 +1,5 @@
 import { mongooseConnect } from "@/lib/mongoose";
+import { Category } from "@/models/Category";
 import { Order } from "@/models/Order";
 import { Product } from "@/models/Product";
 
@@ -38,6 +39,7 @@ export default async function handler(req, res) {
 
     // const productInfo = Product.find(p => p._id.toString() === product.productId);
     const productInfo = await Product.findById({_id: product.productId});
+    const productInfoCategory = await Category.findById({_id: productInfo.category});
     // const quantity = productsIds.filter(id => id === productId).length || 0;
     // const {amount, price} = cartProducts.find(p => p.productId === productId);
     // const {amount} = product;
@@ -47,14 +49,15 @@ export default async function handler(req, res) {
     // const unit_amount = product.amount * product.price * 100;
     const unit_amount = product.price * 100;
 
-
+    console.log("fffffffffffffffffffff");
+    console.log(productInfoCategory.name);
     
     if(quantity > 0 && productInfo) {
       line_items.push({
         quantity, 
         price_data: {
           currency: 'RUB',
-          product_data: {name: productInfo.title},
+          product_data: {name: productInfo.title, description: productInfoCategory.name},
           unit_amount:  unit_amount,
         }
       });
