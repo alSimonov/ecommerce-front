@@ -357,7 +357,7 @@ export default function CategoryPage() {
               
             </FiltersWrap>
 
-            <ProductsGrid products={filteredProducts}/>
+            <ProductsGrid countColumns="3" products={filteredProducts}/>
           </DivideWrap>
 
         </Center>

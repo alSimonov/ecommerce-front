@@ -14,7 +14,7 @@ export default function ProductsPage({products}){
       <Layout>
         <Center>
           <Title>All products</Title>
-          <ProductsGrid products={products}/>
+          <ProductsGrid countColumns="4" products={products}/>
         </Center>
       </Layout>
     </>

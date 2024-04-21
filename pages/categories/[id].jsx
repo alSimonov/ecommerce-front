@@ -31,7 +31,7 @@ export default function CategoriesPage() {
 			return;
 		}
 
-		axios.get('/api/categories?id='+id).then(response => {
+		axios.get('/api/categories?parent='+id).then(response => {
 			setCategories(response.data);
 		});
 	}, [id]);

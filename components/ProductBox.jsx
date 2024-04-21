@@ -9,6 +9,7 @@ import Rating from './Rating';
 import Test from './Test';
 import { Category } from "@/models/Category";
 import Trash from "./icons/Trash";
+import axios from "axios";
 
 const ProductWrapper = styled.div`
 
@@ -161,6 +162,36 @@ export default function ProductBox({_id, title, description, price, measures, im
   const [cartProductsTemp, setCartProductsTemp] = useState(cartProducts);
   const [propertyProduct, setPropertyProduct] = useState("");
 
+
+  const [categoryObj, setCategoryObj] = useState({});
+  const [productImg, setProductImg] = useState(images?.[0]);
+
+
+
+  useEffect(() => {
+		
+    if(images[0] === undefined){
+      axios.get('/api/categories?id='+category).then(response => {
+        setProductImg(response.data[0]?.images[0]);
+      });
+      
+    }
+  
+ 
+	}, []) 
+
+  
+
+
+  // useEffect(() => {
+  //   setProductImg(categoryObj[0]?.images[0]);
+  //   console.log(categoryObj[0]?.images[0]);
+
+	// }, [categoryObj]) 
+
+
+
+
   // console.log(category);
 
   // const categoryObj = await Category.findById(category);
@@ -208,7 +239,8 @@ export default function ProductBox({_id, title, description, price, measures, im
     <ProductWrapper>
       <WhiteBox >
         <ImagexBox href={url}>
-          <img src={images?.[0]} alt={title} />
+          <img src={productImg} alt={title} />
+          {/* <img src={images?.[0]} alt={title} /> */}
         </ImagexBox>
 
         <ProductInfoBox>

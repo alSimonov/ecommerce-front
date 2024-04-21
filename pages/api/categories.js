@@ -8,7 +8,10 @@ export default async function handle(req, res) {
     
     if(method === 'GET'){
         if (req.query?.id) {
-			res.json(await Category.find({parent:req.query.id}));
+			res.json(await Category.find({_id:req.query.id}));
+		}
+        else if(req.query?.parent) {
+			res.json(await Category.find({parent:req.query.parent}));
 		} else {
 			res.json(await Category.find().populate('parent'));
 		}
