@@ -12,6 +12,8 @@ import Button from "./Button";
 import User from "./icons/user";
 import IconLogout from "./icons/IconLogout";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { AccountContext } from "./AccountContext";
+import CartIcon from "./icons/CartIcon";
 
 
 const StyledHeader = styled.header`
@@ -56,6 +58,9 @@ const NavLink = styled(Link)`
   color: #aaa;
   text-decoration: none;
   padding: 10px 0;
+  height: 30px;
+
+
 
   &:hover {
     color: #fff;
@@ -112,7 +117,35 @@ const DropDownContent = styled.div`
 
 `;
 
+const Avatar = styled.div`
+  display: table-cell;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+
+  line-height: 40px;
+
+  text-align: center;
+  vertical-align: middle;
+  background-color: #eee;
+
+  font-size: 1em;
+  color: #ccc;
+
+`;
+const IconStyled = styled.div`
+  
+  width: 30px;
+  height: 30px;
+
+`;
+
+
+
+
+
 export default function Header() {
+  const {accountObj,  accountSession , accountFI} = useContext(AccountContext);
   const {cartProducts, clearCart} = useContext(CartContext);
   const [mobileNavAcive, setMobileNavAcive] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -153,9 +186,24 @@ export default function Header() {
 
               </DropDownContent>
             </DropDown>
-            <NavLink href={'/account'}>  Аккаунт</NavLink> 
-            <NavLink href={'/cart'}>  Корзина ({cartProducts.length})</NavLink>
+            <NavLink href={'/cart'} >  
+            <IconStyled>
+              <CartIcon />  
+            </IconStyled>
+
+
+              Корзина ({cartProducts.length})
+            </NavLink>
             <Button onClick={clearCart} $white size="icon"><Trash /></Button>
+            
+            <NavLink href={'/account'}>  
+                <Avatar>
+                  {accountFI}
+                </Avatar> 
+
+
+              Аккаунт           
+            </NavLink>
             <Button onClick={logout} ><IconLogout/></Button>
 
           </StyledNav>

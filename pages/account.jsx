@@ -2,13 +2,14 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import IconYandex from "@/components/icons/IconYandex";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import Input from "@/components/Input";
 import Link from "next/link";
 import axios from "axios";
+import { AccountContext } from "@/components/AccountContext";
 
 
 
@@ -176,6 +177,7 @@ const ButtonDes = styled(Button)`
 
 export default function Account(){
 
+  const {accountObj, setAccountObj, accountSession, setAccountSession, accountFI, setAccountFI, accountExit} = useContext(AccountContext);
   const [session, setSession] = useState(false);
 
 
@@ -211,25 +213,19 @@ export default function Account(){
 
   function CheckAccount(clientAccountObj){
     if(clientAccountObj.password === password){
-      setSession(true);
-
-      setFI(clientAccountObj.name.substr(0,1) + clientAccountObj.surname.substr(0,1));
-
+      setAccountObj(clientAccountObj);
+      setAccountSession(true);
+      setAccountFI(clientAccountObj.name.substr(0,1) + clientAccountObj.surname.substr(0,1));
     }
   }
  
-
-  function changeSession(){
-    setSession(!session );
-  }
-
   function exit(){
-    setSession();
+    accountExit();
   }
  
 
 
-  if(!session){
+  if(!accountSession){
     return (
       <>
 
@@ -279,10 +275,6 @@ export default function Account(){
             </Wrapper>
           </CenterCenter>
 
-            <Button $primary onClick={changeSession}>
-              fff
-            </Button>
-
         </Layout>
       </>
     );
@@ -297,12 +289,12 @@ export default function Account(){
             <WhiteBoxSide>
 
               <Avatar>
-                {FI}
+                {accountFI}
               </Avatar>
 
 
               <Name>
-                {clientAccountObj.name} <br /> {clientAccountObj.surname}
+                {accountObj.name} <br /> {accountObj.surname}
               </Name>        
 
 
@@ -351,10 +343,6 @@ export default function Account(){
           
           </WrapperMainForm>
         </Center>
-
-        <Button $primary onClick={changeSession}>
-                fff
-        </Button>
 
       </Layout>
 

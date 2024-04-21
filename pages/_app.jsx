@@ -2,6 +2,7 @@ import { CartContextProvider } from "@/components/CartContext";
 import { createGlobalStyle } from "styled-components";
 import { SessionProvider, useSession } from "next-auth/react";
 import Header from "@/components/Header";
+import { AccountContextProvider } from "@/components/AccountContext";
 
 
 
@@ -27,9 +28,11 @@ export default function App({ Component, pageProps:{ session, ...pageProps } }) 
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" />
       {/* <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap" /> */}
       <GlobalStyles/>
-      <CartContextProvider>
-          <Component {...pageProps} />
-      </CartContextProvider>
+      <AccountContextProvider>
+        <CartContextProvider>
+            <Component {...pageProps} />
+        </CartContextProvider>
+      </AccountContextProvider>
     
     </SessionProvider>
   );
