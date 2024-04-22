@@ -5,17 +5,17 @@ import { Category } from "@/models/Category";
 
 const StyledProductsGridCss = css`
   display: grid;
-  grid-template-columns: 1fr 1fr ;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
 
 
-  ${props => props.countColumns === '4' && css`
+  ${props => props.$countcolumns === '4' && css`
     @media screen and (min-width: 768px) {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     };
   `};
   
-  ${props => props.countColumns === '3' && css`
+  ${props => props.$countcolumns === '3' && css`
     @media screen and (min-width: 768px) {
       grid-template-columns: 1fr 1fr 1fr ;
     }

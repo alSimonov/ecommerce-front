@@ -1,9 +1,11 @@
+import { AccountContext } from "@/components/AccountContext";
 import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Layout from "@/components/Layout";
+import Select from "@/components/Select";
 import Table from "@/components/Table";
 import Trash from "@/components/icons/Trash";
 import axios from "axios";
@@ -71,8 +73,30 @@ const CityHolder = styled.div`
 
 `;
 
+const FiltersCheck = styled.div`
+  font-size: .9em;
+  font-weight: 300;
+`;
+
+
+const StyledSelect = styled.select`
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc; 
+  border-radius: 5px;
+  box-sizing: border-box;
+
+
+
+
+`;
+
+
+
 export default function CartPage(){
   const {cartProducts, addProduct, removeProduct, clearCart} = useContext(CartContext);
+  const {accountObj} = useContext(AccountContext);
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -81,6 +105,13 @@ export default function CartPage(){
   const [streetAddress, setStreetAddress] = useState('');
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+
+
+  const [addresses, setAddresses] = useState([]);
+  const [addressesValues, setAddressesValues] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  const [categories, setCategories] = useState([]);
 
   let cartIds = [];
   useEffect(() => {
@@ -95,7 +126,65 @@ export default function CartPage(){
       setIsSuccess(true);
       clearCart();
     }
+
+    loadAccountInfo();
+
+    fetchCategories();
+
+    if(accountObj !== undefined && accountObj._id !== undefined){
+      fetchAddresses();
+    }
+
+
+   
+
+
   }, [])
+
+  useEffect(() => {
+
+    var addressesValuesTemp = [];
+
+    // for(let i = 0; i < addresses.length; i++){
+    //   var values = Object.keys(addresses).map(function(key){
+    //     return addresses[key];
+    //   });
+    //   addressesValuesTemp.push(values);
+    // }
+
+    // setAddressesValues(addressesValuesTemp);
+
+    addresses.map(function(adr) {
+      addressesValuesTemp.push(adr.country + " г." + adr.city + " ул." + adr.street + " " + adr.postalCode);
+    });
+
+    setAddressesValues(addressesValuesTemp);
+
+    console.log("tttttttttttttttttttttttttttt");
+    console.log(addresses);
+    console.log(addressesValues);
+
+  },[addresses])
+
+  function loadAccountInfo(){
+    setName(accountObj.surname + " " + accountObj.name);
+    setEmail(accountObj.email);
+
+
+  }
+
+  function fetchAddresses(){
+    axios.get('/api/addressDestination?clientAccountId='+accountObj._id).then(response => {
+      setAddresses(response.data);
+      
+		});
+  }
+  function fetchCategories(){
+    axios.get('/api/categories').then(response => {
+      setCategories(response.data);
+      
+		});
+  }
 
   function loadCartProducts() {
     if(cartProducts.length > 0){
@@ -124,9 +213,26 @@ export default function CartPage(){
   
 
   async function goToPayment(){
-    const response = await axios.post('/api/checkout', {
-      name,email,city,postalCode,streetAddress,country,cartProducts
-    });
+
+    var data = {};
+
+    if(selectedAddress === "" ){
+      data = {
+        name,email,city,postalCode,streetAddress,country,cartProducts
+      };
+    } else{
+      data = {
+        name,email,city: addresses[selectedAddress].city, 
+        postalCode: addresses[selectedAddress].postalCode, 
+        streetAddress: addresses[selectedAddress].street, 
+        country: addresses[selectedAddress].country, 
+        cartProducts
+      };
+    }
+
+    
+
+    const response = await axios.post('/api/checkout', data);
     if(response.data.url){
       window.location = response.data.url;
     }
@@ -180,7 +286,12 @@ export default function CartPage(){
                       <tr key={product.productId}>
                         <ProductInfoCell>
                           <ProductImageBox>
-                            <img src={products.find(p => p._id === product.productId)?.images[0]} alt="" />
+                            <img src={
+                              
+                              products.find(p => p._id === product.productId)?.images[0] || 
+                              categories.find(c => c._id === products.find(p => p._id === product.productId).category)?.images[0]
+                            
+                            } alt="" />
                           </ProductImageBox>
                           {products.find(p => p._id === product.productId)?.title}
                         </ProductInfoCell>
@@ -235,13 +346,33 @@ export default function CartPage(){
                 
                 <Input type="text" placeholder="Имя" value={name} name="name" onChange={ev => setName(ev.target.value)}/>
                 <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
-                <CityHolder>
-                  <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
-                  <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
-                </CityHolder>
-                <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => setStreetAddress(ev.target.value)}/>
-                <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
+
                 
+                  
+                <StyledSelect 
+                  value={selectedAddress}
+                  onChange={ev => setSelectedAddress(ev.target.value)}
+                >
+                  <option value="">Выберите адрес доставки</option>
+                  {addressesValues.length > 0 && Object.entries(addressesValues).map(([key, value]) => (
+                    <option value={key}>{value}</option>
+                  ))}
+                </StyledSelect>
+                   
+                {selectedAddress === "" &&
+                  <>
+                    <div>
+                      Или напишите вручную
+                    </div>
+
+                    <CityHolder>
+                      <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
+                      <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
+                    </CityHolder>
+                    <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => setStreetAddress(ev.target.value)}/>
+                    <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
+                  </>
+                }   
                 <Button $black $block onClick={goToPayment} >Продолжить оплату</Button>
               
               </Box>

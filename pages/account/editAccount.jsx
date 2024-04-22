@@ -37,24 +37,6 @@ const Wrapper = styled.div`
   
 `;
 
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-
-  &:hover {
-    color: #5542f6;
-  }
-`;
-
-
-
-const NavMenu = styled.div`
- 
-  display: flex;
-  flex-direction: column;
-
-`;
-
 const WrapperMainForm = styled.div`
   padding-top: 50px;
   display: flex;
@@ -206,12 +188,6 @@ export default function Account(){
   
   const [FI, setFI] = useState("");
 
-  const [edit, setEdit] = useState(false);
-  const [editedEmail, setEditedEmail] = useState("");
-  const [editedSurname, setEditedSurname] = useState("");
-  const [editedName, setEditedName] = useState("");
-
-
 
 
 
@@ -242,15 +218,7 @@ export default function Account(){
     }
   }
  
-  function startEdit(){
-    setEdit(true);
-    setEditedEmail(email);
-    setEditedSurname(clientAccountObj.surname);
-    setEditedName(clientAccountObj.name);
-  }
-
   function exit(){
-    setEdit(false);
     accountExit();
   }
  
@@ -328,24 +296,8 @@ export default function Account(){
                 {accountObj.name} <br /> {accountObj.surname}
               </Name>        
 
-              <NavMenu>
-                <NavLink href="/account">
-                  Главная
-                </NavLink>
-                <NavLink href="/account/address">
-                  Мои заказы
-                </NavLink>
-                <NavLink href="/account/address">
-                  Мои отзывы
-                </NavLink>
-                <NavLink href="/account/address">
-                  Адреса доставки
-                </NavLink>
-              </NavMenu>
 
-
-
-              <ButtonDes onClick={() => startEdit()}>
+              <ButtonDes onClick={() => exit()}>
                 Изменить профиль  
               </ButtonDes >
              
@@ -356,68 +308,32 @@ export default function Account(){
 
             </WhiteBoxSide>
           
-          {!edit && 
             <WhiteBoxMain>
               Мои данные
 
-              <Row>
-                <WhiteBox>
-                  Мои заказы
-                </WhiteBox>
-                <WhiteBox>
-                  Мои отзывы
-                </WhiteBox>
+              <InputWrapper>
+                <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+                <Input type="text" placeholder="Фамилия" value={surname} name="Surname" onChange={ev => setSurname(ev.target.value)}/>
+                <Input type="text" placeholder="Имя" value={name} name="Name" onChange={ev => setName(ev.target.value)}/>
 
-                <WhiteBox>
-                  Адреса доставки
-                </WhiteBox>
-
-              </Row>
-
-              Сервис и помощь
-
-              <Row>
-                <WhiteBox>
-                  Как оплатить товар
-                </WhiteBox>
-                <WhiteBox>
-                  Как отменить заказ
-                </WhiteBox>
-              </Row>
+                
+                { !passwordMatching &&
+                    <WarningText> 
+                      *Пароли не совпадают
+                    </WarningText>
+                    
+                }
+                <Input type="text" placeholder="Пароль" value={passwordSecond} name="password" onChange={ev => setPasswordSecond(ev.target.value)}/>
+             
+              </InputWrapper>
+              
 
 
 
             </WhiteBoxMain>
-          
-          }
 
 
           
-            { edit &&
-
-              <WhiteBoxMain>
-                Мои данные
-
-                <InputWrapper>
-                  <Input type="text" placeholder="Почта" value={editedEmail} name="email" onChange={ev => setEditedEmail(ev.target.value)}/>
-                  <Input type="text" placeholder="Фамилия" value={editedSurname} name="Surname" onChange={ev => setEditedSurname(ev.target.value)}/>
-                  <Input type="text" placeholder="Имя" value={editedName} name="Name" onChange={ev => setEditedName(ev.target.value)}/>
-
-                  
-                </InputWrapper>
-                
-                <Button onClick={() => setEdit(false)}>
-                  Отменить
-                </Button>
-                <Button $primary>
-                  Сохранить
-                </Button>
-
-
-              </WhiteBoxMain>
-            
-            }
-
           
           </WrapperMainForm>
         </Center>

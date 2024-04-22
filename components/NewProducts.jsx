@@ -13,7 +13,7 @@ export default function NewProducts({products}){
   return (
     <Center>
       <Title>Новые товары</Title>
-      <ProductsGrid countColumns="4" products={products}/>
+      <ProductsGrid $countcolumns="4" products={products}/>
     </Center>
   );
 }

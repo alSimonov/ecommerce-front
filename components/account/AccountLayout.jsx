@@ -2,7 +2,7 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useContext, useEffect, useState } from "react";
+import { Children, useContext, useEffect, useState } from "react";
 import IconYandex from "@/components/icons/IconYandex";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
@@ -37,24 +37,6 @@ const Wrapper = styled.div`
   
 `;
 
-const NavLink = styled(Link)`
-  text-decoration: none;
-  color: #000;
-
-  &:hover {
-    color: #5542f6;
-  }
-`;
-
-
-
-const NavMenu = styled.div`
- 
-  display: flex;
-  flex-direction: column;
-
-`;
-
 const WrapperMainForm = styled.div`
   padding-top: 50px;
   display: flex;
@@ -75,6 +57,24 @@ const ButtonWrapper = styled.div`
 const LinkReg = styled(Link)`
   matgin: 50px;
   text-decoration: none;
+`;
+
+const NavLink = styled(Link)`
+  text-decoration: none;
+  color: #000;
+
+  &:hover {
+    color: #5542f6;
+  }
+`;
+
+
+
+const NavMenu = styled.div`
+ 
+  display: flex;
+  flex-direction: column;
+
 `;
 
 const WhiteBoxSide = styled.div`
@@ -193,7 +193,7 @@ const ButtonDes = styled(Button)`
 
 
 
-export default function Account(){
+export default function Account({children}){
 
   const {accountObj, setAccountObj, accountSession, setAccountSession, accountFI, accountExit} = useContext(AccountContext);
   const [session, setSession] = useState(false);
@@ -328,21 +328,21 @@ export default function Account(){
                 {accountObj.name} <br /> {accountObj.surname}
               </Name>        
 
+
               <NavMenu>
-                <NavLink href="/account">
+                <NavLink href="/account/mainPageAccount">
                   Главная
                 </NavLink>
-                <NavLink href="/account/address">
+                <NavLink href="/account/myOrders">
                   Мои заказы
                 </NavLink>
-                <NavLink href="/account/address">
+                <NavLink href="/account/myComments">
                   Мои отзывы
                 </NavLink>
                 <NavLink href="/account/address">
                   Адреса доставки
                 </NavLink>
               </NavMenu>
-
 
 
               <ButtonDes onClick={() => startEdit()}>
@@ -355,8 +355,14 @@ export default function Account(){
               
 
             </WhiteBoxSide>
+
+            <WhiteBoxMain>
+              {children}
+            </WhiteBoxMain>
+
+
           
-          {!edit && 
+          {/* {!edit && 
             <WhiteBoxMain>
               Мои данные
 
@@ -367,11 +373,9 @@ export default function Account(){
                 <WhiteBox>
                   Мои отзывы
                 </WhiteBox>
-
                 <WhiteBox>
                   Адреса доставки
                 </WhiteBox>
-
               </Row>
 
               Сервис и помощь
@@ -416,7 +420,7 @@ export default function Account(){
 
               </WhiteBoxMain>
             
-            }
+            } */}
 
           
           </WrapperMainForm>

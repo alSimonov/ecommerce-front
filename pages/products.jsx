@@ -13,8 +13,8 @@ export default function ProductsPage({products}){
     <>
       <Layout>
         <Center>
-          <Title>All products</Title>
-          <ProductsGrid countColumns="4" products={products}/>
+          <Title>Все товары</Title>
+          <ProductsGrid $countcolumns="4" products={products}/>
         </Center>
       </Layout>
     </>

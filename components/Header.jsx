@@ -145,7 +145,7 @@ const IconStyled = styled.div`
 
 
 export default function Header() {
-  const {accountObj,  accountSession , accountFI} = useContext(AccountContext);
+  const {accountObj,  accountSession , accountFI, accountExit} = useContext(AccountContext);
   const {cartProducts, clearCart} = useContext(CartContext);
   const [mobileNavAcive, setMobileNavAcive] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -163,7 +163,8 @@ export default function Header() {
   
   async function logout(){
     // await router.push('/');
-    await signOut();
+    accountExit();
+
   }
 
 
@@ -187,22 +188,20 @@ export default function Header() {
               </DropDownContent>
             </DropDown>
             <NavLink href={'/cart'} >  
-            <IconStyled>
-              <CartIcon />  
-            </IconStyled>
+              {/* <IconStyled>
+                <CartIcon />  
+              </IconStyled> */}
 
 
               Корзина ({cartProducts.length})
             </NavLink>
             <Button onClick={clearCart} $white size="icon"><Trash /></Button>
             
-            <NavLink href={'/account'}>  
+            <NavLink href={'/account/mainPageAccount'}>  
                 <Avatar>
                   {accountFI}
                 </Avatar> 
 
-
-              Аккаунт           
             </NavLink>
             <Button onClick={logout} ><IconLogout/></Button>
 

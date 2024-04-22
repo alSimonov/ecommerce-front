@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import Input from "./Input";
-import Rating from './Rating';
+import { Rating } from "@mui/material";
 import Test from './Test';
 import { Category } from "@/models/Category";
 import Trash from "./icons/Trash";
@@ -46,6 +46,13 @@ const Title = styled(Link)`
   margin: 0;
 `;
 
+const RowRate = styled.div`
+  display: flex;
+  font-size: .9rem;
+  
+  text-color: #ccc;
+  justify-content: space-between;
+`;
 const Properties = styled.div`
   display: block;
   font-size: .9rem;
@@ -146,8 +153,6 @@ const ButtonTrash = styled(Button)`
   background-color: white;
 
 
-
-
 `;
 
 
@@ -166,6 +171,10 @@ export default function ProductBox({_id, title, description, price, measures, im
   const [categoryObj, setCategoryObj] = useState({});
   const [productImg, setProductImg] = useState(images?.[0]);
 
+  const [comments, setComments] = useState([]);
+  const [productAvgRate, setProductAvgRate] = useState(0);
+  const [countComments, setCountComments] = useState("");
+
 
 
   useEffect(() => {
@@ -176,9 +185,41 @@ export default function ProductBox({_id, title, description, price, measures, im
       });
       
     }
+
+    axios.get('/api/comments?productId='+_id).then(response => {
+      setComments(response.data);
+    });
   
  
 	}, []) 
+  
+  useEffect(() => {
+    if(comments.length > 0){
+      calculateAvgRate();
+    }  
+	}, [comments]) 
+
+  function calculateAvgRate(){
+    var sum = 0;
+    comments.map(comm => sum += comm.ratingValue);
+    var avgSum = (sum / comments.length)/10;
+    setProductAvgRate(avgSum);
+
+    switch(comments.length % 10){
+      case 0: 
+      case 5: 
+      case 6: 
+      case 7: 
+      case 8: 
+      case 9: setCountComments(comments.length + " отзывов"); break;
+
+      case 1: setCountComments(comments.length + " отзыв"); break;
+      case 2:  
+      case 3: 
+      case 4: setCountComments(comments.length + " отзыва"); break;
+    }
+  }
+
 
   
 
@@ -246,7 +287,17 @@ export default function ProductBox({_id, title, description, price, measures, im
         <ProductInfoBox>
           <Title href={url}>{ title }</Title>
           
-          <Rating />
+          <RowRate>
+            <Rating name="half-rating-read" value={productAvgRate} precision={0.5} readOnly /> 
+            {comments.length > 0 &&
+              <>
+                {countComments}
+                {/* {comments.length} отзывов */}
+              </>
+            }
+
+          </RowRate>
+          
 
           <Properties >
             { typeof properties !== 'undefined' && Object.entries(properties).map(([key, value]) => (

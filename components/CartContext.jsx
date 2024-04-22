@@ -22,6 +22,7 @@ export function CartContextProvider({children}) {
     // const indexOfProduct = cartProducts.map(e => e.productId).indexOf(productId);
 
     console.log("ppppppppppppppppppppppppppppppppppppppp");
+    console.log(indexOfProduct);
     if(indexOfProduct > -1) {
       const amount = cartProducts[indexOfProduct].amount;
       
@@ -30,16 +31,11 @@ export function CartContextProvider({children}) {
       console.log(allAmount);
 
       if(allAmount > 0) {
-        cartProducts[indexOfProduct] = {productId, amount: allAmount, price};
-        // setCartProducts(cartProducts)
-
-        console.log(cartProducts);
-
+        removeProduct(productId);
+        setCartProducts(prev => [...prev, {productId, amount: allAmount, price}]);
       }
       else{
         removeProduct(productId);
-        console.log(cartProducts);
-
       }
 
     }
