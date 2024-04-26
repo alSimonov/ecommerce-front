@@ -120,6 +120,7 @@ export default function CommentBox({_id, productId, commentText, ratingValue, cl
   function substrAccountFI(){
     setAccountFIAvatar(account[0]?.name?.substr(0,1) + account[0]?.surname?.substr(0,1));
     setAccountFI(account[0]?.name + " " + account[0]?.surname)
+    setCommentCreatedAt(new Date(createdAt).toLocaleDateString())
   }
 
 
@@ -144,7 +145,7 @@ export default function CommentBox({_id, productId, commentText, ratingValue, cl
 
           <RowTopRight>
 
-            {createdAt}
+            {commentCreatedAt}
 
             <Rating name="half-rating-read" value={ratingValue/10} precision={0.5} readOnly /> 
 

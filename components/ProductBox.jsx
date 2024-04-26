@@ -361,10 +361,13 @@ export default function ProductBox({_id, title, description, price, measures, im
                   </Button>
                   
 
-                  <Button  $primary $outline  onClick={() => location.href='/cart'}>
-                    <CartIcon />
-                    ({cartProducts.find(pr => pr.productId === _id).amount})
-                  </Button>
+                  <Link href={"/cart"}>
+                    <Button  $primary $outline  >
+                    {/* <Button  $primary $outline onClick={() => location.href='/cart'} > */}
+                      <CartIcon />
+                      ({cartProducts.find(pr => pr.productId === _id).amount})
+                    </Button>
+                  </Link>
 
                   <ButtonTrash $block onClick={() => removeProduct(_id)} $primary $outline >
                       <Trash/>                
