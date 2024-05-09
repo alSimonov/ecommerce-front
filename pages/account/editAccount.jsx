@@ -10,6 +10,7 @@ import Input from "@/components/Input";
 import Link from "next/link";
 import axios from "axios";
 import { AccountContext } from "@/components/AccountContext";
+import AccountLayout from "@/components/account/AccountLayout";
 
 
 
@@ -183,19 +184,25 @@ export default function Account(){
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  
+  const [passwordMatching, setPasswordMatching] = useState("");
+  const [passwordSecond, setPasswordSecond] = useState("");
+  
 
   const [clientAccountObj, setClientAccountObj] = useState({});
   
   const [FI, setFI] = useState("");
 
 
+  // useEffect(() => {
+    
+  // },[])
 
 
   useEffect(() => {
-		
     CheckAccount(clientAccountObj);
-    
- 
 	}, [clientAccountObj]) 
 
   
@@ -224,121 +231,30 @@ export default function Account(){
  
 
 
-  if(!accountSession){
-    return (
-      <>
-
-        <Layout>
-          <CenterCenter>
-            <Wrapper>
-
-
-
-                <Title>
-                  Авторизация
-                </Title>
-
-                <InputWrapper>
-                  <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
-                  <Input type="text" placeholder="Пароль" value={password} name="password" onChange={ev => setPassword(ev.target.value)}/>
-                </InputWrapper>
-
-                <ButtonWrapper>
-                  <Button $primary onClick={() => SignInAccount()}>
-                    Войти
-                  </Button>
-                
-
-                  
-                  <LinkReg href={"/registration"} >
-                    Регистрация
-                  </LinkReg>
-
-                </ButtonWrapper>
-
-
-
-
-              
-            
-
-              {/* <ButtonSign onclick={() => signIn('yandex')} >
-                <IconYandex/> 
-                Авторизоваться
-              </ButtonSign> */}
-            
-
-
-              
-
-            </Wrapper>
-          </CenterCenter>
-
-        </Layout>
-      </>
-    );
-
-  }
 
   return(
     <>
-      <Layout>
-        <Center>
-          <WrapperMainForm>
-            <WhiteBoxSide>
+      <AccountLayout>
+        
+        Мои данные
 
-              <Avatar>
-                {accountFI}
-              </Avatar>
+        <InputWrapper>
+          <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+          <Input type="text" placeholder="Фамилия" value={surname} name="Surname" onChange={ev => setSurname(ev.target.value)}/>
+          <Input type="text" placeholder="Имя" value={name} name="Name" onChange={ev => setName(ev.target.value)}/>
 
-
-              <Name>
-                {accountObj.name} <br /> {accountObj.surname}
-              </Name>        
-
-
-              <ButtonDes onClick={() => exit()}>
-                Изменить профиль  
-              </ButtonDes >
-             
-              <ButtonDes onClick={() => exit()}>
-                Выйти  
-              </ButtonDes>
+          
+          {/* { !passwordMatching &&
+              <WarningText> 
+                *Пароли не совпадают
+              </WarningText>
               
-
-            </WhiteBoxSide>
-          
-            <WhiteBoxMain>
-              Мои данные
-
-              <InputWrapper>
-                <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
-                <Input type="text" placeholder="Фамилия" value={surname} name="Surname" onChange={ev => setSurname(ev.target.value)}/>
-                <Input type="text" placeholder="Имя" value={name} name="Name" onChange={ev => setName(ev.target.value)}/>
-
-                
-                { !passwordMatching &&
-                    <WarningText> 
-                      *Пароли не совпадают
-                    </WarningText>
-                    
-                }
-                <Input type="text" placeholder="Пароль" value={passwordSecond} name="password" onChange={ev => setPasswordSecond(ev.target.value)}/>
-             
-              </InputWrapper>
-              
-
-
-
-            </WhiteBoxMain>
-
-
-          
-          
-          </WrapperMainForm>
-        </Center>
-
-      </Layout>
+          }
+          <Input type="text" placeholder="Пароль" value={passwordSecond} name="password" onChange={ev => setPasswordSecond(ev.target.value)}/>
+        */}
+        </InputWrapper>
+        
+      </AccountLayout>
 
 
       

@@ -5,6 +5,7 @@ const AddressDestinationSchema = new Schema({
     postalCode: {type: String, required:true} ,
     street: {type: String, required:true} ,
     country: {type: String, required:true} ,
+    houseNumber: {type: String, required:true} ,
     clientAccountId: {type: mongoose.Schema.Types.ObjectId, ref: 'clientaccounts'},
 });
 

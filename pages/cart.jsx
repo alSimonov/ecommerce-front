@@ -94,6 +94,17 @@ const StyledSelect = styled.select`
 
 
 
+const WarningLabel = styled.label`
+
+  font-size: .8em;
+  color: red;
+
+
+`;
+
+
+
+
 export default function CartPage(){
   const {cartProducts, addProduct, removeProduct, clearCart} = useContext(CartContext);
   const {accountObj} = useContext(AccountContext);
@@ -104,7 +115,13 @@ export default function CartPage(){
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [country, setCountry] = useState('');
+  const [houseNumber, setHouseNumber] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+
+
+  const [warningName, setWarningName] = useState(false);
+  const [warningEmail, setWarningEmail] = useState(false);
+  const [warningAddress, setWarningAddress] = useState(false);
 
 
   const [addresses, setAddresses] = useState([]);
@@ -112,6 +129,8 @@ export default function CartPage(){
   const [selectedAddress, setSelectedAddress] = useState("");
 
   const [categories, setCategories] = useState([]);
+
+  const emailTrust = ["@mail.ru", "@gmail.com" ,"@yandex.ru", "@example.com", "@example2.com"];
 
   let cartIds = [];
   useEffect(() => {
@@ -155,7 +174,7 @@ export default function CartPage(){
     // setAddressesValues(addressesValuesTemp);
 
     addresses.map(function(adr) {
-      addressesValuesTemp.push(adr.country + " г." + adr.city + " ул." + adr.street + " " + adr.postalCode);
+      addressesValuesTemp.push( adr.postalCode+", " + adr.country + " г." + adr.city + " ул." + adr.street + " д." + adr.houseNumber );
     });
 
     setAddressesValues(addressesValuesTemp);
@@ -166,11 +185,63 @@ export default function CartPage(){
 
   },[addresses])
 
+
+  function changeName(value) {
+    if(value === ""){
+      setWarningName(true);
+    }
+    else setWarningName(false);
+    if (noDigits(value))
+     setName(value);
+  }
+  function changeCity(value) {
+    if (noDigits(value))
+     setCity(value);
+  }
+  function changePostalCode(value) {
+    if (onlyDigits(value))
+     setPostalCode(value);
+  }
+  function changeStreetAddress(value) {
+    if (noDigits(value))
+     setStreetAddress(value);
+  }
+  function changeCountry(value) {
+    if (noDigits(value))
+     setCountry(value);
+  }
+
+  function noDigits(value){
+    if(value.length === 0){
+      return true;
+    }
+    return "1234567890".indexOf(value.substr(value.length - 1)) == -1
+  }
+  function onlyDigits(value){
+    if(value.length === 0){
+      return true;
+    }
+    return "1234567890".indexOf(value.substr(value.length - 1)) !== -1
+  }
+
+  function changeEmail(value) {
+
+    setWarningEmail(true);
+
+
+    for (var i = 0; i < emailTrust.length; i++){
+      if ( value.endsWith(emailTrust[i]) ) {
+        setWarningEmail(false);
+        break;
+      }
+    }
+  
+    setEmail(value);  
+  }
+
   function loadAccountInfo(){
     setName(accountObj.surname + " " + accountObj.name);
     setEmail(accountObj.email);
-
-
   }
 
   function fetchAddresses(){
@@ -214,11 +285,25 @@ export default function CartPage(){
 
   async function goToPayment(){
 
+    if(warningName){
+      return
+    }
+    if(warningEmail){
+      return
+    }
+
+    if(selectedAddress === "" ){
+      if(!city || !postalCode || !streetAddress || !country || !houseNumber){
+        setWarningAddress(true);
+        return
+      }
+    } 
+
     var data = {};
 
     if(selectedAddress === "" ){
       data = {
-        name,email,city,postalCode,streetAddress,country,cartProducts
+        name,email,city,postalCode,streetAddress,country, houseNumber, cartProducts
       };
     } else{
       data = {
@@ -226,6 +311,7 @@ export default function CartPage(){
         postalCode: addresses[selectedAddress].postalCode, 
         streetAddress: addresses[selectedAddress].street, 
         country: addresses[selectedAddress].country, 
+        houseNumber: addresses[selectedAddress].houseNumber, 
         cartProducts
       };
     }
@@ -344,11 +430,19 @@ export default function CartPage(){
               <Box>
                 <h2>Информация заказа</h2>
                 
-                <Input type="text" placeholder="Имя" value={name} name="name" onChange={ev => setName(ev.target.value)}/>
-                <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
+                {warningName &&
+                  <WarningLabel>*Укажите ваше имя</WarningLabel> 
+                }
+                <Input type="text" placeholder="Имя" value={name} name="name" onChange={ev => changeName(ev.target.value)}/>
+                {warningEmail&&
+                  <WarningLabel>*Сервер почты не опознан</WarningLabel> 
+                }
+                <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => changeEmail(ev.target.value)}/>
 
-                
-                  
+                {warningAddress &&
+                  <WarningLabel>*Укажите адрес доставки</WarningLabel> 
+                }
+
                 <StyledSelect 
                   value={selectedAddress}
                   onChange={ev => setSelectedAddress(ev.target.value)}
@@ -364,13 +458,14 @@ export default function CartPage(){
                     <div>
                       Или напишите вручную
                     </div>
+                    <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => changeCountry(ev.target.value)}/>
 
                     <CityHolder>
-                      <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => setCity(ev.target.value)}/>
-                      <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => setPostalCode(ev.target.value)}/>
+                      <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => changeCity(ev.target.value)}/>
+                      <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => changePostalCode(ev.target.value)}/>
                     </CityHolder>
-                    <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => setStreetAddress(ev.target.value)}/>
-                    <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => setCountry(ev.target.value)}/>
+                    <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => changeStreetAddress(ev.target.value)}/>
+                    <Input type="text" placeholder="Номер дома" value={houseNumber} name="houseNumber" onChange={ev => setHouseNumber(ev.target.value)}/>
                   </>
                 }   
                 <Button $black $block onClick={goToPayment} >Продолжить оплату</Button>

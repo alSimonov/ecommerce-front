@@ -14,6 +14,7 @@ import IconLogout from "./icons/IconLogout";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { AccountContext } from "./AccountContext";
 import CartIcon from "./icons/CartIcon";
+import IconHelp from "./icons/IconHelp";
 
 
 const StyledHeader = styled.header`
@@ -175,6 +176,8 @@ export default function Header() {
         <Wrapper>
           <Logo href={'/'}>Ecommerce</Logo>
           <StyledNav $mobileNavAcive={mobileNavAcive}>
+
+
             <NavLink href={'/'}>Главная</NavLink>
             <NavLink href={'/products'}>Товары</NavLink>
             <DropDown>
@@ -204,6 +207,9 @@ export default function Header() {
 
             </NavLink>
             <Button onClick={logout} ><IconLogout/></Button>
+
+
+              
 
           </StyledNav>
           <NavButton onClick={() => setMobileNavAcive(prev => !prev)}>

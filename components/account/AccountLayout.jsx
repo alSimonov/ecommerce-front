@@ -344,11 +344,16 @@ export default function Account({children}){
                 </NavLink>
               </NavMenu>
 
-
-              <ButtonDes onClick={() => startEdit()}>
+              <NavLink href="/account/editAccount">
+                <ButtonDes onClick={() => startEdit()}>
+                  Изменить профиль  
+                </ButtonDes >
+              </NavLink>
+             
+              {/* <ButtonDes onClick={() => startEdit()}>
                 Изменить профиль  
               </ButtonDes >
-             
+              */}
               <ButtonDes onClick={() => exit()}>
                 Выйти  
               </ButtonDes>

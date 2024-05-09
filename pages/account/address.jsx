@@ -62,6 +62,7 @@ function Address({swal}){
   const [postalCode, setPostalCode] = useState('');
   const [street, setStreet] = useState('');
   const [country, setCountry] = useState('');
+  const [houseNumber, setHouseNumber] = useState('');
 
 
   useEffect(() => {
@@ -74,7 +75,7 @@ function Address({swal}){
     const clientAccountId = accountObj._id;
 
     const data = {
-      city, postalCode, street, country, clientAccountId,
+      city, postalCode, street, country, houseNumber, clientAccountId,
    };
 
     if(editedAddress){
@@ -91,6 +92,7 @@ function Address({swal}){
     setPostalCode('');
     setStreet('');
     setCountry('');
+    setHouseNumber('');
 
     fetchAddresses();
   }
@@ -107,6 +109,7 @@ function Address({swal}){
     setPostalCode(addressObj.postalCode);
     setStreet(addressObj.street);
     setCountry(addressObj.country);
+    setHouseNumber(addressObj.houseNumber);
   }
   function deleteAddress(addressObj){
     swal.fire({
@@ -134,10 +137,11 @@ function Address({swal}){
         Адреса доставки
 
         <InputWrapper>
+          <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="PostalCode" onChange={ev => setPostalCode(ev.target.value)}/>
           <Input type="text" placeholder="Страна" value={country} name="Country" onChange={ev => setCountry(ev.target.value)}/>
           <Input type="text" placeholder="Город" value={city} name="City" onChange={ev => setCity(ev.target.value)}/>
           <Input type="text" placeholder="Улица" value={street} name="Street" onChange={ev => setStreet(ev.target.value)}/>
-          <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="PostalCode" onChange={ev => setPostalCode(ev.target.value)}/>
+          <Input type="text" placeholder="Номер дома" value={houseNumber} name="houseNumber" onChange={ev => setHouseNumber(ev.target.value)}/>
 
           
         </InputWrapper>
@@ -155,20 +159,22 @@ function Address({swal}){
           <Table >
             <Thead>
               <TrTh>
+                <Th>индекс</Th>
                 <Th>Страна</Th>
                 <Th>Город</Th>
                 <Th>Улица</Th>
-                <Th>индекс</Th>
+                <Th>Дом</Th>
                 <Th></Th>
               </TrTh>
             </Thead>
             <tbody>
               {addresses.length > 0 && addresses.map(addr => (
                 <tr key={addr._id}>
+                  <Td>{addr.postalCode}</Td>
                   <Td>{addr.country}</Td>
                   <Td>{addr.city}</Td>
                   <Td>{addr.street}</Td>
-                  <Td>{addr.postalCode}</Td>
+                  <Td>{addr.houseNumber}</Td>
                   <Td>
                     <Button  
                       onClick={() => editAddress(addr)} 

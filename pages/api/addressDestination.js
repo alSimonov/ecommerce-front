@@ -17,16 +17,16 @@ export default async function handle(req, res){
 	}
 
 	if(method === 'POST') {
-		const {city, postalCode, street, country, clientAccountId } = req.body;
+		const {city, postalCode, street, country, houseNumber, clientAccountId } = req.body;
 		const AddressDestinationDoc = await AddressDestination.create({
-			city, postalCode, street, country, clientAccountId 
+			city, postalCode, street, country, houseNumber, clientAccountId 
 		})
 		res.json(AddressDestinationDoc);
 	}
 
 	if( method === 'PUT') {
-		const {_id, city, postalCode, street, country, clientAccountId } = req.body;
-		await AddressDestination.updateOne({_id}, {city, postalCode, street, country, clientAccountId  });
+		const {_id, city, postalCode, street, country, houseNumber, clientAccountId } = req.body;
+		await AddressDestination.updateOne({_id}, {city, postalCode, street, country, houseNumber, clientAccountId  });
 		res.json(true);
 	}
 
