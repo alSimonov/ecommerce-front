@@ -28,28 +28,6 @@ const WraperBody = styled.div`
 
 export default function Layout({children}) {
 
-  const { data: session } = useSession();
-  if(!session){
-    return (
-      <>
-        <Header/>
-        <Center>
-          <Wrapper>
-
-            Авторизация
-
-            <ButtonSign onClick={() => signIn('yandex')} >
-              <IconYandex/> 
-              Авторизоваться
-            </ButtonSign>
-          
-          </Wrapper>
-        </Center>
-      </>
-    );
-
-  }
-
   return (
 
     <div >
