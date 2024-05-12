@@ -449,7 +449,7 @@ export default function CartPage(){
                 >
                   <option value="">Выберите адрес доставки</option>
                   {addressesValues.length > 0 && Object.entries(addressesValues).map(([key, value]) => (
-                    <option value={key}>{value}</option>
+                    <option key={key} value={key}>{value}</option>
                   ))}
                 </StyledSelect>
                    

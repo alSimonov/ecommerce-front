@@ -31,6 +31,13 @@ export function CartContextProvider({children}) {
       console.log(allAmount);
 
       if(allAmount > 0) {
+
+        // setProductProperties(prev => {
+        //   const newProductProps = {...prev};
+        //   newProductProps[propName] = value;
+        //   return newProductProps
+        // })
+
         removeProduct(productId);
         setCartProducts(prev => [...prev, {productId, amount: allAmount, price}]);
       }
