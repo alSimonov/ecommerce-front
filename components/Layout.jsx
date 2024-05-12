@@ -1,5 +1,3 @@
-import { useSession, signIn, signOut } from "next-auth/react";
-import IconYandex from "./Icons/IconYandex";
 import Header from "./Header";
 import Center from "./Center";
 import styled from "styled-components";
