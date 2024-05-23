@@ -111,6 +111,7 @@ export default function CartPage(){
   const [products, setProducts] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
@@ -146,11 +147,10 @@ export default function CartPage(){
       clearCart();
     }
 
-    loadAccountInfo();
-
     fetchCategories();
-
+    
     if(accountObj !== undefined && accountObj._id !== undefined){
+      loadAccountInfo();
       fetchAddresses();
     }
 
@@ -158,7 +158,7 @@ export default function CartPage(){
    
 
 
-  }, [])
+  }, [accountObj])
 
   useEffect(() => {
 
@@ -179,9 +179,6 @@ export default function CartPage(){
 
     setAddressesValues(addressesValuesTemp);
 
-    console.log("tttttttttttttttttttttttttttt");
-    console.log(addresses);
-    console.log(addressesValues);
 
   },[addresses])
 
@@ -224,6 +221,11 @@ export default function CartPage(){
     return "1234567890".indexOf(value.substr(value.length - 1)) !== -1
   }
 
+  function changePhone(value){
+    if (onlyDigits(value))
+      setPhone(value);
+  }
+
   function changeEmail(value) {
 
     setWarningEmail(true);
@@ -242,6 +244,7 @@ export default function CartPage(){
   function loadAccountInfo(){
     setName(accountObj.surname + " " + accountObj.name);
     setEmail(accountObj.email);
+    setPhone(accountObj.phone);
   }
 
   function fetchAddresses(){
@@ -303,11 +306,12 @@ export default function CartPage(){
 
     if(selectedAddress === "" ){
       data = {
-        name,email,city,postalCode,streetAddress,country, houseNumber, cartProducts
+        name,email, phone, city,postalCode,streetAddress,country, houseNumber, cartProducts
       };
     } else{
       data = {
-        name,email,city: addresses[selectedAddress].city, 
+        name,email, phone,
+        city: addresses[selectedAddress].city, 
         postalCode: addresses[selectedAddress].postalCode, 
         streetAddress: addresses[selectedAddress].street, 
         country: addresses[selectedAddress].country, 
@@ -375,7 +379,7 @@ export default function CartPage(){
                             <img src={
                               
                               products.find(p => p._id === product.productId)?.images[0] || 
-                              categories.find(c => c._id === products.find(p => p._id === product.productId).category)?.images[0]
+                              categories.find(c => c._id === products.find(p => p._id === product.productId)?.category)?.images[0]
                             
                             } alt="" />
                           </ProductImageBox>
@@ -438,6 +442,7 @@ export default function CartPage(){
                   <WarningLabel>*Сервер почты не опознан</WarningLabel> 
                 }
                 <Input type="text" placeholder="Email" value={email} name="email" onChange={ev => changeEmail(ev.target.value)}/>
+                <Input type="text" maxlength="11"  placeholder="Телефон" value={phone} name="phone" onChange={ev => changePhone(ev.target.value)}/>
 
                 {warningAddress &&
                   <WarningLabel>*Укажите адрес доставки</WarningLabel> 

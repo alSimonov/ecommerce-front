@@ -5,6 +5,7 @@ const OrderSchema = new Schema({
   name: String,
   city: String,
   email: String,
+  phone: String,
   postalCode: String,
   streetAddress: String,
   houseNumber: String,

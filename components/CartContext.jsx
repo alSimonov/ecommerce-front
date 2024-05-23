@@ -21,25 +21,22 @@ export function CartContextProvider({children}) {
     const indexOfProduct = cartProducts.findIndex(p => p.productId === productId);
     // const indexOfProduct = cartProducts.map(e => e.productId).indexOf(productId);
 
-    console.log("ppppppppppppppppppppppppppppppppppppppp");
-    console.log(indexOfProduct);
+
     if(indexOfProduct > -1) {
       const amount = cartProducts[indexOfProduct].amount;
       
       const allAmount = (amount - 0) + (amountNew - 0);
 
-      console.log(allAmount);
-
       if(allAmount > 0) {
 
-        // setProductProperties(prev => {
-        //   const newProductProps = {...prev};
-        //   newProductProps[propName] = value;
-        //   return newProductProps
-        // })
+        setCartProducts(prev => {
+          const newCartProducts = [...prev];
+          newCartProducts[indexOfProduct] = {productId, amount: allAmount, price};
+          return newCartProducts;
+        })
 
-        removeProduct(productId);
-        setCartProducts(prev => [...prev, {productId, amount: allAmount, price}]);
+        // removeProduct(productId);
+        // setCartProducts(prev => [...prev, {productId, amount: allAmount, price}]);
       }
       else{
         removeProduct(productId);

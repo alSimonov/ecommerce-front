@@ -4,7 +4,8 @@ import { SessionProvider, useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import { AccountContextProvider } from "@/components/AccountContext";
 
-
+import { useEffect } from 'react';
+import OneSignal from 'react-onesignal';
 
 const GlobalStyles = createGlobalStyle`
   body{
@@ -19,9 +20,23 @@ const GlobalStyles = createGlobalStyle`
 
 
 
-
-
 export default function App({ Component, pageProps:{ session, ...pageProps } }) {
+
+  useEffect(() => {
+    // OneSignal.init({ appId: 'fcea5578-439a-462e-ad71-d09dc1ab8a11' });
+
+   
+    
+    OneSignal.init({
+      appId: 'fcea5578-439a-462e-ad71-d09dc1ab8a11',
+      notifyButton: { enable: true },
+      allowLocalhostAsSecureOrigin: true,
+    });
+  
+
+  });
+
+
   return (
     <SessionProvider session={session}>  
     

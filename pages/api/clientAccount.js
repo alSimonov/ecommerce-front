@@ -8,7 +8,10 @@ export default async function handle(req, res){
 
 
 	if( method === 'GET'){
-		if (req.query?.email) {
+		if (req.query?._id) {
+			res.json(await ClientAccount.findOne({_id:req.query._id}));
+		}
+		else if (req.query?.email) {
 			res.json(await ClientAccount.findOne({email:req.query.email}));
 		} else {
 			res.json(await ClientAccount.find());
@@ -16,16 +19,16 @@ export default async function handle(req, res){
 	}
 
 	if(method === 'POST') {
-		const {email, surname, name, password } = req.body;
+		const {email, phone, surname, name, password } = req.body;
 		const ClientAccountDoc = await ClientAccount.create({
-			email, surname, name, password,
+			email, phone, surname, name, password,
 		})
 		res.json(ClientAccountDoc);
 	}
 
 	if( method === 'PUT') {
-		const {email, surname, name, password } = req.body;
-		await ClientAccount.updateOne({_id}, {email, surname, name, password });
+		const {email, phone, surname, name, password, _id } = req.body;
+		await ClientAccount.updateOne({_id}, {email, phone, surname, name, password });
 		res.json(true);
 	}
 

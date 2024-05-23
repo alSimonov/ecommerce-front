@@ -222,7 +222,6 @@ export default function Account({children}){
  
 	}, [clientAccountObj]) 
 
-  
 
 
   async function SignInAccount(){
@@ -336,24 +335,15 @@ export default function Account({children}){
                 <NavLink href="/account/myOrders">
                   Мои заказы
                 </NavLink>
-                <NavLink href="/account/myComments">
+                {/* <NavLink href="/account/myComments">
                   Мои отзывы
-                </NavLink>
+                </NavLink> */}
                 <NavLink href="/account/address">
                   Адреса доставки
                 </NavLink>
               </NavMenu>
 
-              <NavLink href="/account/editAccount">
-                <ButtonDes onClick={() => startEdit()}>
-                  Изменить профиль  
-                </ButtonDes >
-              </NavLink>
              
-              {/* <ButtonDes onClick={() => startEdit()}>
-                Изменить профиль  
-              </ButtonDes >
-              */}
               <ButtonDes onClick={() => exit()}>
                 Выйти  
               </ButtonDes>
@@ -365,69 +355,6 @@ export default function Account({children}){
               {children}
             </WhiteBoxMain>
 
-
-          
-          {/* {!edit && 
-            <WhiteBoxMain>
-              Мои данные
-
-              <Row>
-                <WhiteBox>
-                  Мои заказы
-                </WhiteBox>
-                <WhiteBox>
-                  Мои отзывы
-                </WhiteBox>
-                <WhiteBox>
-                  Адреса доставки
-                </WhiteBox>
-              </Row>
-
-              Сервис и помощь
-
-              <Row>
-                <WhiteBox>
-                  Как оплатить товар
-                </WhiteBox>
-                <WhiteBox>
-                  Как отменить заказ
-                </WhiteBox>
-              </Row>
-
-
-
-            </WhiteBoxMain>
-          
-          }
-
-
-          
-            { edit &&
-
-              <WhiteBoxMain>
-                Мои данные
-
-                <InputWrapper>
-                  <Input type="text" placeholder="Почта" value={editedEmail} name="email" onChange={ev => setEditedEmail(ev.target.value)}/>
-                  <Input type="text" placeholder="Фамилия" value={editedSurname} name="Surname" onChange={ev => setEditedSurname(ev.target.value)}/>
-                  <Input type="text" placeholder="Имя" value={editedName} name="Name" onChange={ev => setEditedName(ev.target.value)}/>
-
-                  
-                </InputWrapper>
-                
-                <Button onClick={() => setEdit(false)}>
-                  Отменить
-                </Button>
-                <Button $primary>
-                  Сохранить
-                </Button>
-
-
-              </WhiteBoxMain>
-            
-            } */}
-
-          
           </WrapperMainForm>
         </Center>
 

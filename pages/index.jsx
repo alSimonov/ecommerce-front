@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Layout from "@/components/Layout";
 import NewProducts from "@/components/NewProducts";
 import { mongooseConnect } from "@/lib/mongoose";
+import { FeaturedProduct } from "@/models/FeaturedProduct";
 import { Product } from "@/models/Product";
 import { useSession } from "next-auth/react";
 
@@ -20,9 +21,12 @@ export default function HomePage({featuredProduct, newProducts}) {
 }
 
 export async function getServerSideProps() {
-  const featuredProductId = "65a3ef645e86368e3ed48cb7";
+  // const featuredProductId = "65a3ef645e86368e3ed48cb7";
   await mongooseConnect();
-  const featuredProduct = await Product.findById(featuredProductId);
+
+  const featuredProductId = await FeaturedProduct.findById("664f3dfe3b795a09c7aae38b");
+
+  const featuredProduct = await Product.findById(featuredProductId.productId);
   const newProducts = await Product.find({}, null, { sort: {'_id': -1}, limit: 8 });
   return {
     props: {

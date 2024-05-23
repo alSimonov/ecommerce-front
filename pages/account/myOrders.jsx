@@ -150,6 +150,7 @@ export default function MyOrders(){
           <Table >
             <Thead>
               <TrTh>
+                <Th>код заказа</Th>
                 <Th>Дата</Th>
                 <Th>Оплата</Th>
                 <Th>Адрес доставки</Th>
@@ -161,6 +162,7 @@ export default function MyOrders(){
             <tbody>
               {orders.length > 0 && orders.map(order => (
                 <tr key={order._id}>
+                  <Td>{order._id}</Td>
                   <Td>{(new Date(order.createdAt)).toLocaleString()}</Td>
 
                   {order.paid &&  
@@ -176,7 +178,7 @@ export default function MyOrders(){
 
                     {order.line_items.map(l => (
                       <>
-                        {l.price_data?.product_data?.name} | {l.quantity}шт. | ₽{(l.price_data?.unit_amount / 100) * l.quantity} <br/>                    
+                        {l.price_data?.product_data?.name} <br/> | {l.quantity}шт. | ₽{(l.price_data?.unit_amount / 100) * l.quantity} <br/>  ___ <br/>                  
                       </>
                      ))}
 

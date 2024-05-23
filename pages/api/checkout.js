@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const {name, email, city, postalCode, streetAddress, country, houseNumber, cartProducts} = req.body;
+  const {name, email, phone, city, postalCode, streetAddress, country, houseNumber, cartProducts} = req.body;
   await mongooseConnect();
   // const productsIds = cartProducts;
   // console.log(productsIds);
@@ -19,9 +19,7 @@ export default async function handler(req, res) {
   // const uniqueIds = [...new Set(productsIds)];
 
   // const {productId} = cartProducts;
-   
-
-  
+     
 
   // const productsInfos = await Product.find({_id: cartProducts.productId});
   
@@ -65,7 +63,7 @@ export default async function handler(req, res) {
   }
 
   const orderDoc = await Order.create({
-    line_items, name, city, email,
+    line_items, name, city, email, phone,
     postalCode, streetAddress,
     country, houseNumber, statusOrder: "В сборке", paid:false 
    })
