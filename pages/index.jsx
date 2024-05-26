@@ -11,6 +11,8 @@ import { useSession } from "next-auth/react";
 
 export default function HomePage({featuredProduct, newProducts}) {
   
+  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+  console.log(newProducts);
 
   return (
     <Layout>
@@ -27,7 +29,15 @@ export async function getServerSideProps() {
   const featuredProductId = await FeaturedProduct.findById("664f3dfe3b795a09c7aae38b");
 
   const featuredProduct = await Product.findById(featuredProductId.productId);
-  const newProducts = await Product.find({}, null, { sort: {'_id': -1}, limit: 8 });
+
+  const queryDB = {  active:  true  };
+  
+
+  // const newProducts = await Product.find({active: true}, null, { sort: {'_id': -1}, limit: 8 });
+  const newProducts = await Product.find(queryDB, null, { sort: {'_id': -1}, limit: 8 });
+
+ 
+
   return {
     props: {
       featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),

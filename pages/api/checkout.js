@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const {name, email, phone, city, postalCode, streetAddress, country, houseNumber, cartProducts} = req.body;
+  const {name, email, phone, city, postalCode, streetAddress, country, houseNumber, cartProducts, typeDelivery} = req.body;
   await mongooseConnect();
   // const productsIds = cartProducts;
   // console.log(productsIds);
@@ -62,11 +62,22 @@ export default async function handler(req, res) {
     }
   }
 
-  const orderDoc = await Order.create({
-    line_items, name, city, email, phone,
-    postalCode, streetAddress,
-    country, houseNumber, statusOrder: "В сборке", paid:false 
-   })
+  var orderDoc = "";
+
+  if(typeDelivery){
+    orderDoc = await Order.create({
+      line_items, name, email, phone,
+      statusOrder: "В сборке", paid:false 
+     })
+  } else {
+    orderDoc = await Order.create({
+      line_items, name, city, email, phone,
+      postalCode, streetAddress,
+      country, houseNumber, statusOrder: "В сборке", paid:false 
+     })
+
+  }
+
 
    const session = await stripe.checkout.sessions.create({
     line_items,

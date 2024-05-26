@@ -49,7 +49,7 @@ export default function Footer() {
       <Center>
         
       <Wraper   >
-        © 2020 Copyright: 
+        © 2024 Copyright: 
         <NavLink  href='https://github.com/alSimonov'>
           AlSimonov
         </NavLink>

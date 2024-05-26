@@ -8,8 +8,13 @@ export default async function handle(req, res) {
     await mongooseConnect();
     
     if(method === 'GET'){
+
+        
+        
         if (req.query?.id) {
-			res.json(await Product.find({category:req.query.id}));
+            const queryDB = { $and: [ {active: true}, {category: req.query.id, }]} ;
+			// res.json(await Product.find({category:req.query.id}));
+			res.json(await Product.find(queryDB));
 		} 
        
         else if (req.query?.title && req.query?.sort) {
@@ -26,8 +31,9 @@ export default async function handle(req, res) {
                 sortSel =  {sort: { "title" : req.query?.sortVect}};
             } 
             
+            const queryDB = { $and: [ {active: true}, { "title": { "$regex": req.query?.title, "$options": "i" } } ]};
             
-            const queryDB = { "title": { "$regex": req.query?.title, "$options": "i" } };
+            // const queryDB = { "title": { "$regex": req.query?.title, "$options": "i" } };
 
 			res.json(await Product.find(queryDB, null, sortSel));	
 		}
@@ -48,12 +54,17 @@ export default async function handle(req, res) {
                 sortSel =  {sort: { "title" : req.query?.sortVect}};
             } 
 
-			res.json(await Product.find({}, null, sortSel));	
+            const queryDB = {active: true};
+
+
+			res.json(await Product.find(queryDB, null, sortSel));	
         }
         else {
             console.log("wwwwwwwwww444444444444444");
+            const queryDB = {active: true};
 
-			res.json(await Product.find({}, null, {sort: {'title': -1}}));
+
+			res.json(await Product.find(queryDB, null, {sort: {'title': -1}}));
 		}
         
     }

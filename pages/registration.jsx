@@ -3,12 +3,13 @@ import Header from "@/components/Header";
 import styled from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState } from "react";
-import IconYandex from "@/components/icons/IconYandex";
+// import IconYandex from "@/components/icons/IconYandex";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
 import Input from "@/components/Input";
 import Link from "next/link";
 import axios from "axios";
+// import bcrypt from "bcrypt";
 
 
 
@@ -97,6 +98,16 @@ const WarningText = styled.div`
   color: red;
 `;
 
+const WarningWrapper = styled.div`
+  width: 100%;
+  text-align: left;
+`;
+
+const WarningLabel = styled.label`
+  font-size: .8em;
+  color: red;
+`;
+
 
 
 
@@ -123,28 +134,115 @@ export default function Registraion(){
   
   const [passwordMatching, setPasswordMatching] = useState(true);
 
+  const [warningSurname, setWarningSurname] = useState(false);
+  const [warningName, setWarningName] = useState(false);
+  const [warningEmailExist, setWarningEmailExist] = useState(false);
+  const [warningEmail, setWarningEmail] = useState(false);
+  const [warningPassword, setWarningPassword] = useState(false);
+
+  const emailTrust = ["@mail.ru", "@gmail.com" ,"@yandex.ru", "@example.com", "@example2.com"];
+
+
+
+  const crypto = require('crypto');
+
+
+  
+  function noDigits(value){
+    if(value.length === 0){
+      return true;
+    }
+    return "1234567890".indexOf(value.substr(value.length - 1)) == -1
+  }
+
+  function changeSurname(value) {
+    if (noDigits(value))
+     setSurname(value);
+  }
+  function changeName(value) {
+    if (noDigits(value))
+     setName(value);
+  }
+
+  function changeEmail(value) {
+
+    checkEmailServer(value);
+  
+    setEmail(value);  
+  }
+  
+  function checkEmailServer(value){
+    setWarningEmail(true);
+
+
+    for (var i = 0; i < emailTrust.length; i++){
+      if ( value.endsWith(emailTrust[i]) ) {
+        setWarningEmail(false);
+        break;
+      }
+    }
+  
+  }
 
 
   async function SignUpAccount(){
+
+    if(warningSurname === ""){
+      setWarningSurname(true);
+      return;
+    } else setWarningSurname(false);
+    if(warningName === ""){
+      setWarningName(true);
+      return;
+    } else setWarningName(false);
+   
+    checkEmailServer(email);
+
+    if(warningEmail){
+      return
+    }
+
+    if(passwordFirst === "" && passwordSecond === ""){
+      setWarningPassword(true);
+      return;
+    }
+    else{
+      setWarningPassword(false);
+    }
 
     if(passwordFirst === passwordSecond){
 
       setPasswordMatching(true);
 
-      const response = await axios.post('/api/clientAccount', {
-        email, surname, name, password: passwordFirst
+
+      await axios.get('/api/clientAccount?email='+email).then(response => {
+        console.log("ttttttttttttttttttttttttt");
+        console.log(response.data);
+        if(response.data){
+          setWarningEmailExist(true);
+          return;
+        } else {
+          setWarningEmailExist(false);
+        }
       });
+
+      var passwordHash = crypto.createHash('sha1')
+          .update(passwordFirst).digest('hex');
+      
+      const response = await axios.post('/api/clientAccount', {
+        email, surname, name, password: passwordHash
+      });
+      console.log(response.data);
+      console.log(response.data.url);
+
       if(response.data.url){
-        window.location = "/account";
+        window.location = "/account/mainPageAccount";
       }
     }
     else{
       setPasswordMatching(false);
-    }
-
-  
+    }  
   }
-
 
   return(
     <>
@@ -160,18 +258,50 @@ export default function Registraion(){
             </Title>
 
             <InputWrapper>
-              <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
-              <Input type="text" placeholder="Фамилия" value={surname} name="Surname" onChange={ev => setSurname(ev.target.value)}/>
-              <Input type="text" placeholder="Имя" value={name} name="Name" onChange={ev => setName(ev.target.value)}/>
+              {/* <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/> */}
+             
+              <WarningWrapper>
+                {warningEmail&&
+                  <WarningLabel>*Сервер почты не опознан</WarningLabel> 
+                }
+              </WarningWrapper>
+              <WarningWrapper>
+                {warningEmailExist&&
+                  <WarningLabel>*Эта почта уже зарегистрирована</WarningLabel> 
+                }
+              </WarningWrapper>
+              <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => changeEmail(ev.target.value)}/>
+            
+
+              <WarningWrapper>
+                {warningSurname &&
+                  <WarningLabel>*Укажите вашу фамилию</WarningLabel> 
+                }
+              </WarningWrapper>
+              <Input type="text" placeholder="Фамилия" value={surname} name="Surname" onChange={ev => changeSurname(ev.target.value)}/>
+              
+              <WarningWrapper>
+                {warningName &&
+                  <WarningLabel>*Укажите ваше имя</WarningLabel> 
+                } 
+              </WarningWrapper>
+              <Input type="text" placeholder="Имя" value={name} name="Name" onChange={ev => changeName(ev.target.value)}/>
+             
+              <WarningWrapper>
+                {warningPassword &&
+                  <WarningLabel>*Придумайте пароль</WarningLabel> 
+                } 
+              </WarningWrapper>
               <Input type="text" placeholder="Пароль" value={passwordFirst} name="password" onChange={ev => setPasswordFirst(ev.target.value)}/>
               
-              { !passwordMatching &&
-                  <WarningText> 
-                    *Пароли не совпадают
-                  </WarningText>
-                  
-              }
-              <Input type="text" placeholder="Пароль" value={passwordSecond} name="password" onChange={ev => setPasswordSecond(ev.target.value)}/>
+              <WarningWrapper>
+                { !passwordMatching &&
+                    <WarningText> 
+                      *Пароли не совпадают
+                    </WarningText>   
+                }
+              </WarningWrapper>
+              <Input type="text" placeholder="Повторите пароль" value={passwordSecond} name="password" onChange={ev => setPasswordSecond(ev.target.value)}/>
              
             </InputWrapper>
 

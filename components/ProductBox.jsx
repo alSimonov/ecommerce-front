@@ -10,6 +10,8 @@ import Test from './Test';
 import { Category } from "@/models/Category";
 import Trash from "./icons/Trash";
 import axios from "axios";
+import IconConfirm from "./icons/IconConfirm";
+import X_markIcon from "./icons/X_markIcon";
 
 const ProductWrapper = styled.div`
 
@@ -52,6 +54,29 @@ const RowRate = styled.div`
   
   text-color: #ccc;
   justify-content: space-between;
+`;
+const RowAvailable = styled.div`
+  height: 1em;
+  color: #16a34a;
+  display: flex;
+  font-size: .9rem;
+  
+  
+  // justify-content: space-between;
+`;
+const RowUnavailable = styled.div`
+  height: 1em;
+  color: #dc2625;
+  display: flex;
+  font-size: .9rem;
+  
+  
+  // justify-content: space-between;
+`;
+const IconWrapperConfirm = styled.div`
+
+  height: 1em;
+  color: #16a34a;
 `;
 const Properties = styled.div`
   display: block;
@@ -156,7 +181,7 @@ const ButtonTrash = styled(Button)`
 `;
 
 
-export default function ProductBox({_id, title, description, price, measures, images, category, rate, properties}) {
+export default function ProductBox({_id, title, description, price, measures, images, category, rate, properties, available}) {
   const {addProduct, cartProducts, removeProduct} = useContext(CartContext);
   const url = '/product/' +_id;
 
@@ -297,6 +322,22 @@ export default function ProductBox({_id, title, description, price, measures, im
             }
 
           </RowRate>
+
+
+          { available && 
+            <RowAvailable>
+              <IconConfirm />
+              Есть в наличии
+            </RowAvailable>
+
+            ||
+
+            <RowUnavailable>
+              <X_markIcon/>
+              В наличии нет
+            </RowUnavailable>
+          }
+
           
 
           <Properties >
@@ -378,11 +419,19 @@ export default function ProductBox({_id, title, description, price, measures, im
                   )
                   :
                 (
-                  <Button $block onClick={() => addProductToCart(_id, amount, price)} $primary $outline>
-                    В корзину                
-                  </Button>                
-                  )
-                }   
+
+                  available ? 
+
+                    <Button $block onClick={() => addProductToCart(_id, amount, price)} $primary $outline>
+                      В корзину                
+                    </Button>                
+                    :
+                    <Button $block onClick={() => {}} $primary $outline>
+                      В корзину                
+                    </Button>
+
+                )
+              }   
 
           
           </PriceRow>

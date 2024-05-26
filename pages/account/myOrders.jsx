@@ -6,6 +6,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { withSwal } from 'react-sweetalert2';
+import IconInfo from "@/components/icons/IconInfo";
 
 
 
@@ -38,6 +39,7 @@ const Th = styled.td`
 `;
 const Td = styled.td`
   font-size: .7em;
+  // text-align: center;
   
   ${props => props.$green && css`
     color: #16a34a;
@@ -68,6 +70,9 @@ const StyledSelect = styled.select`
 const SortRow = styled.div`
   display: flex;
   font-size: .8em;
+`;
+const IconInfoWrapper = styled.div`
+  width: 2.3em;
 `;
 
 
@@ -162,7 +167,12 @@ export default function MyOrders(){
             <tbody>
               {orders.length > 0 && orders.map(order => (
                 <tr key={order._id}>
-                  <Td>{order._id}</Td>
+                  <Td>
+                    <IconInfoWrapper>
+                      <IconInfo/>
+                    </IconInfoWrapper>
+                    {/* {order._id} */}
+                  </Td>
                   <Td>{(new Date(order.createdAt)).toLocaleString()}</Td>
 
                   {order.paid &&  
@@ -172,7 +182,18 @@ export default function MyOrders(){
                   }
 
                   <Td>
-                    {order.postalCode}, {order.country} г.{order.city} ул.{order.streetAddress} д. {order.houseNumber}  <br/>                     
+                    {/* {order.postalCode}, {order.country} г.{order.city} ул.{order.streetAddress} д. {order.houseNumber}  <br/>                      */}
+                  
+                    { order.postalCode && 
+                      <>
+                        Адрес: {order.postalCode}, {order.country} г.{order.city} ул.{order.streetAddress} д. {order.houseNumber}  <br/> 
+                      </>
+                      ||
+                      <>
+                        Самовывоз  <br/> 
+                      </>
+                    }
+
                   </Td>
                   <Td>
 

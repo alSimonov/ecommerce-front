@@ -11,6 +11,7 @@ import Trash from "@/components/icons/Trash";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -78,6 +79,12 @@ const FiltersCheck = styled.div`
   font-weight: 300;
 `;
 
+const YMapsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+`;
+
 
 const StyledSelect = styled.select`
   width: 100%;
@@ -92,14 +99,9 @@ const StyledSelect = styled.select`
 
 `;
 
-
-
 const WarningLabel = styled.label`
-
   font-size: .8em;
   color: red;
-
-
 `;
 
 
@@ -129,9 +131,17 @@ export default function CartPage(){
   const [addressesValues, setAddressesValues] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
 
+  const [typeDelivery , setTypeDelivery] = useState(false);
+
   const [categories, setCategories] = useState([]);
 
   const emailTrust = ["@mail.ru", "@gmail.com" ,"@yandex.ru", "@example.com", "@example2.com"];
+
+  const defaultState = {
+    center: [55.751574, 37.573856],
+    zoom: 5,
+  };
+
 
   let cartIds = [];
   useEffect(() => {
@@ -295,7 +305,8 @@ export default function CartPage(){
       return
     }
 
-    if(selectedAddress === "" ){
+
+    if( !typeDelivery && selectedAddress === "" ){
       if(!city || !postalCode || !streetAddress || !country || !houseNumber){
         setWarningAddress(true);
         return
@@ -304,7 +315,12 @@ export default function CartPage(){
 
     var data = {};
 
-    if(selectedAddress === "" ){
+    if(typeDelivery){
+      data = {
+        name,email, phone, cartProducts, typeDelivery
+      };
+
+    } else if(selectedAddress === "" ){
       data = {
         name,email, phone, city,postalCode,streetAddress,country, houseNumber, cartProducts
       };
@@ -445,39 +461,86 @@ export default function CartPage(){
                 <Input type="text" maxlength="11"  placeholder="Телефон" value={phone} name="phone" onChange={ev => changePhone(ev.target.value)}/>
 
                 {warningAddress &&
-                  <WarningLabel>*Укажите адрес доставки</WarningLabel> 
+                  <WarningLabel>*Укажите самовывоз или адрес доставки</WarningLabel> 
                 }
 
-                <StyledSelect 
-                  value={selectedAddress}
-                  onChange={ev => setSelectedAddress(ev.target.value)}
-                >
-                  <option value="">Выберите адрес доставки</option>
-                  {addressesValues.length > 0 && Object.entries(addressesValues).map(([key, value]) => (
-                    <option key={key} value={key}>{value}</option>
-                  ))}
-                </StyledSelect>
-                   
-                {selectedAddress === "" &&
-                  <>
-                    <div>
-                      Или напишите вручную
-                    </div>
-                    <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => changeCountry(ev.target.value)}/>
+                <div>
+                  <input type="checkbox" onChange={ev => setTypeDelivery(ev.target.checked)}   /> Самовывоз
+                </div>
+                
 
-                    <CityHolder>
-                      <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => changeCity(ev.target.value)}/>
-                      <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => changePostalCode(ev.target.value)}/>
-                    </CityHolder>
-                    <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => changeStreetAddress(ev.target.value)}/>
-                    <Input type="text" placeholder="Номер дома" value={houseNumber} name="houseNumber" onChange={ev => setHouseNumber(ev.target.value)}/>
+                
+              
+                {typeDelivery && 
+                  <YMapsWrapper>
+                    <div>
+                      <YMaps>
+                          
+                        <Map
+                          defaultState={{
+                            center: [53.435889, 33.902787],
+                            zoom: 15,
+                          }}
+                          >
+                          <Placemark geometry={[53.435889, 33.902787]} />
+                        </Map>
+
+                      </YMaps>
+                    </div>
+                  </YMapsWrapper>
+
+                 ||
+
+                  <>
+                    <StyledSelect 
+                      value={selectedAddress}
+                      onChange={ev => setSelectedAddress(ev.target.value)}
+                      >
+                      <option value="">Выберите адрес доставки</option>
+                      {addressesValues.length > 0 && Object.entries(addressesValues).map(([key, value]) => (
+                        <option key={key} value={key}>{value}</option>
+                      ))}
+                    </StyledSelect>
+                        
+                    {selectedAddress === "" &&
+                      <>
+                        <div>
+                          Или напишите вручную
+                        </div>
+                        <Input type="text" placeholder="Страна" value={country} name="country" onChange={ev => changeCountry(ev.target.value)}/>
+
+                        <CityHolder>
+                          <Input type="text" placeholder="Город" value={city} name="city" onChange={ev => changeCity(ev.target.value)}/>
+                          <Input type="text" placeholder="Почтовый индекс" value={postalCode} name="postalCode" onChange={ev => changePostalCode(ev.target.value)}/>
+                        </CityHolder>
+                        <Input type="text" placeholder="Улица" value={streetAddress} name="streetAddress" onChange={ev => changeStreetAddress(ev.target.value)}/>
+                        <Input type="text" placeholder="Номер дома" value={houseNumber} name="houseNumber" onChange={ev => setHouseNumber(ev.target.value)}/>
+                      </>
+                    
+                    }
+
                   </>
-                }   
+
+
+
+                }
+
+
+                
+
+              
                 <Button $black $block onClick={goToPayment} >Продолжить оплату</Button>
               
               </Box>
             )}
+            
+            
+
+
           </ColumnsWrapper>
+
+        
+
         </Center>
       </Layout>
     </>

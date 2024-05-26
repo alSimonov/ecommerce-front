@@ -9,6 +9,9 @@ const ProductSchema = new Schema({
   images: [{type:String}],
   category: {type:mongoose.Schema.Types.ObjectId, ref:'Category'},
   properties: {type:Object},
+	available: {type:Boolean},
+	active: {type:Boolean},
+
 }, {
   timestamps: true,
 });

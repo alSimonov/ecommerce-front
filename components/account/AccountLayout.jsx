@@ -177,6 +177,15 @@ const Title = styled.div`
 const ButtonDes = styled(Button)`
   margin: 5px 0;
 `;
+const WarningWrapper = styled.div`
+  width: 100%;
+  text-align: left;
+`;
+const WarningLabel = styled.label`
+  font-size: .8em;
+  color: red;
+`;
+
 
 
 
@@ -206,18 +215,26 @@ export default function Account({children}){
   
   const [FI, setFI] = useState("");
 
+  const [warningEmail, setWarningEmail] = useState(false);
+
   const [edit, setEdit] = useState(false);
   const [editedEmail, setEditedEmail] = useState("");
   const [editedSurname, setEditedSurname] = useState("");
   const [editedName, setEditedName] = useState("");
 
 
+  const crypto = require('crypto');
 
 
 
   useEffect(() => {
 		
-    CheckAccount(clientAccountObj);
+    if(clientAccountObj){
+      setWarningEmail(false);
+      CheckAccount(clientAccountObj);
+    }else {
+      setWarningEmail(true);
+    }
     
  
 	}, [clientAccountObj]) 
@@ -235,9 +252,16 @@ export default function Account({children}){
 
 
   function CheckAccount(clientAccountObj){
-    if(clientAccountObj.password === password){
+
+    var passwordHash = crypto.createHash('sha1')
+    .update(password).digest('hex');
+
+    if(clientAccountObj.password === passwordHash){
+      setWarningEmail(false);
       setAccountObj(clientAccountObj);
       setAccountSession(true);
+    }else{
+      setWarningEmail(true);
     }
   }
  
@@ -270,6 +294,11 @@ export default function Account({children}){
                 </Title>
 
                 <InputWrapper>
+                  <WarningWrapper>
+                    {warningEmail&&
+                      <WarningLabel>*Неправильная почта или пароль.</WarningLabel> 
+                    }
+                  </WarningWrapper>
                   <Input type="text" placeholder="Почта" value={email} name="email" onChange={ev => setEmail(ev.target.value)}/>
                   <Input type="text" placeholder="Пароль" value={password} name="password" onChange={ev => setPassword(ev.target.value)}/>
                 </InputWrapper>
