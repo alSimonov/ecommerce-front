@@ -4,11 +4,12 @@ import Input from "@/components/Input";
 import AccountLayout from "@/components/account/AccountLayout";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+// import styled, { css } from "styled-components";
 import styled, { css } from "styled-components";
 import { withSwal } from 'react-sweetalert2';
 import IconInfo from "@/components/icons/IconInfo";
-
-
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import  { styled as styledMui}  from '@mui/material/styles';
 
 
 const InputWrapper = styled.div`
@@ -50,11 +51,6 @@ const Td = styled.td`
 
 `;
 
-const ButtonCancel = styled(Button)`
-  margin-left: 10px;
-  background-color: #fecaca;
-  color: #de255c;
-`;
 
 const StyledSelect = styled.select`
   width: 200px;
@@ -74,6 +70,19 @@ const SortRow = styled.div`
 const IconInfoWrapper = styled.div`
   width: 2.3em;
 `;
+
+
+
+const LightTooltip = styledMui(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 18,
+  },
+}));
 
 
 
@@ -128,6 +137,8 @@ export default function MyOrders(){
       <AccountLayout>
         Мои заказы
 
+        
+
           {/* <Input type="text" placeholder="Поиск" value={title} name="searchTitle" onChange={ev => setSearchTitle(ev.target.value)}/> */}
           <SortRow>
             <div>
@@ -168,9 +179,11 @@ export default function MyOrders(){
               {orders.length > 0 && orders.map(order => (
                 <tr key={order._id}>
                   <Td>
-                    <IconInfoWrapper>
-                      <IconInfo/>
-                    </IconInfoWrapper>
+                    <LightTooltip  title={order._id}>
+                      <IconInfoWrapper>
+                        <IconInfo/>
+                      </IconInfoWrapper>
+                    </LightTooltip>
                     {/* {order._id} */}
                   </Td>
                   <Td>{(new Date(order.createdAt)).toLocaleString()}</Td>
