@@ -2,7 +2,7 @@ import Center from "@/components/Center";
 import Header from "@/components/Header";
 import styled from "styled-components";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import IconYandex from "@/components/icons/IconYandex";
 import Button from "@/components/Button";
 import Layout from "@/components/Layout";
@@ -140,6 +140,9 @@ export default function Registraion(){
   const [warningEmail, setWarningEmail] = useState(false);
   const [warningPassword, setWarningPassword] = useState(false);
 
+
+  const [clientAccountObj, setClientAccountObj] = useState("fff");
+
   const emailTrust = ["@mail.ru", "@gmail.com" ,"@yandex.ru", "@example.com", "@example2.com"];
 
 
@@ -147,6 +150,29 @@ export default function Registraion(){
   const crypto = require('crypto');
 
 
+  useEffect(() => {
+    if(clientAccountObj){
+      setWarningEmailExist(true);
+    } else if (!clientAccountObj) {
+      console.log("cccccccccccccccccccc");
+      console.log(clientAccountObj);
+      setWarningEmailExist(false);
+      createAccount();
+    }
+  },[clientAccountObj])
+
+  async function createAccount(){
+    var passwordHash = crypto.createHash('sha1')
+    .update(passwordFirst).digest('hex');
+
+    const response = await axios.post('/api/clientAccount', {
+      email, surname, name, password: passwordHash
+    });
+    
+    if(response.data){
+      window.location = "/account/mainPageAccount";
+    }
+  }
   
   function noDigits(value){
     if(value.length === 0){
@@ -216,28 +242,10 @@ export default function Registraion(){
 
 
       await axios.get('/api/clientAccount?email='+email).then(response => {
-        console.log("ttttttttttttttttttttttttt");
-        console.log(response.data);
-        if(response.data){
-          setWarningEmailExist(true);
-          return;
-        } else {
-          setWarningEmailExist(false);
-        }
+        setClientAccountObj(response.data);
       });
 
-      var passwordHash = crypto.createHash('sha1')
-          .update(passwordFirst).digest('hex');
-      
-      const response = await axios.post('/api/clientAccount', {
-        email, surname, name, password: passwordHash
-      });
-      console.log(response.data);
-      console.log(response.data.url);
-
-      if(response.data.url){
-        window.location = "/account/mainPageAccount";
-      }
+     
     }
     else{
       setPasswordMatching(false);
@@ -312,7 +320,7 @@ export default function Registraion(){
                 Зарегистрироваться
               </Button>
             
-              <LinkReg href={"/account"} >
+              <LinkReg href={"/account/mainPageAccount"} >
                 Авторизация
               </LinkReg>
 

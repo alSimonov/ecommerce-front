@@ -317,20 +317,11 @@ export default function Account({children}){
                 </ButtonWrapper>
 
 
-
-
-              
-            
-
               {/* <ButtonSign onclick={() => signIn('yandex')} >
                 <IconYandex/> 
                 Авторизоваться
               </ButtonSign> */}
             
-
-
-              
-
             </Wrapper>
           </CenterCenter>
 
