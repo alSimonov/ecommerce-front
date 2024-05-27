@@ -97,7 +97,7 @@ const PersonName = styled.div`
    font-size: 1.2em;
 `;
 
-export default function CommentBox({_id, productId, commentText, ratingValue, clientAccount, createdAt, updatedAt}) {
+export default function CommentBox({_id, productId, commentText, ratingValue, clientAccountId, createdAt, updatedAt}) {
 
   const [accountFIAvatar, setAccountFIAvatar] = useState("ФИ");
   const [accountFI, setAccountFI] = useState("Фролов Илья");
@@ -108,7 +108,7 @@ export default function CommentBox({_id, productId, commentText, ratingValue, cl
   
   
   useEffect(() => {
-    axios.get('/api/clientAccount?id='+clientAccount).then(response => {
+    axios.get('/api/clientAccount?_id='+clientAccountId).then(response => {
       setAccount(response.data);
     });
 	}, []) 
@@ -118,8 +118,8 @@ export default function CommentBox({_id, productId, commentText, ratingValue, cl
   }, [account]) 
   
   function substrAccountFI(){
-    setAccountFIAvatar(account[0]?.name?.substr(0,1) + account[0]?.surname?.substr(0,1));
-    setAccountFI(account[0]?.name + " " + account[0]?.surname)
+    setAccountFIAvatar(account?.name?.substr(0,1) + account?.surname?.substr(0,1));
+    setAccountFI(account?.name + " " + account?.surname)
     setCommentCreatedAt(new Date(createdAt).toLocaleDateString())
   }
 

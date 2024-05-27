@@ -5,6 +5,7 @@ import NewProducts from "@/components/NewProducts";
 import { mongooseConnect } from "@/lib/mongoose";
 import { FeaturedProduct } from "@/models/FeaturedProduct";
 import { Product } from "@/models/Product";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 
 
@@ -13,6 +14,10 @@ export default function HomePage({featuredProduct, newProducts}) {
   
   console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
   console.log(newProducts);
+
+  function insertData(){
+    axios.insert('/api/clientAccount');
+  }
 
   return (
     <Layout>

@@ -14,6 +14,7 @@ import IconConfirm from "./icons/IconConfirm";
 import X_markIcon from "./icons/X_markIcon";
 
 const ProductWrapper = styled.div`
+  
 
 `;
 

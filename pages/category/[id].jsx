@@ -9,6 +9,7 @@ import X_markIcon from "@/components/icons/X_markIcon";
 import { mongooseConnect } from "@/lib/mongoose";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
+import { Pagination } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -64,6 +65,13 @@ const CenterButton = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const PaginationWrapper = styled.div`
+  
+  display: flex;
+  margin-top: 30px;  
+  justify-content: center;
+  
+`;
 
 
 // export default function CategoryPage({category}) {
@@ -73,10 +81,26 @@ export default function CategoryPage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [category, setCategory] = useState({});
 	const [filters, setFilters] = useState({});
+	const [checkedFilters, setCheckedFilters] = useState({});
  
+  const [page, setPage] = useState(1);
+  const [countProduct, setCountProduct] = useState(100);
   
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+
   const router = useRouter();
 	const {id, parent} = router.query;
+
+  useEffect(() => {
+    if(id)
+      loadProducts();
+  },[page])
+
+ 
+
 	useEffect(() => {
 		if (!id ){
 			return;
@@ -95,22 +119,20 @@ export default function CategoryPage() {
  
     // getServerSideProps(id);
     
-    // loadDefaultFilters(category);
-
-
-
-
-     
-    
+    // loadDefaultFilters(category);    
 
 	}, [id, parent]);
  
   
   function loadProducts(){
-		axios.get('/api/products?id='+id).then(response => {
+		axios.get('/api/products?id='+id+'&page='+page+'&filters='+JSON.stringify(checkedFilters)).then(response => {
 			setProducts(response.data);
 			setFilteredProducts(response.data);
 		}); 
+
+    axios.get('/api/products?count='+1+'&id='+id+'&filters='+JSON.stringify(checkedFilters)).then(response => {
+      setCountProduct(response.data );
+		});
 
   }
 
@@ -127,71 +149,36 @@ export default function CategoryPage() {
           // arrFilters[prop.name].push({key: value, value: false})        
         ))
       )) 
-       
-
-
-
-
-    // {console.log(category.properties)}
-    {console.log("fffffffffffffffffffffffffffffffffffffffffffffffffffff")}
-    // {console.log(arrFilters)}
+      
 
     setFilters(arrFilters);
   }
 
-  // console.log(products)
  
-  console.log(filters)
 
   function clearFilters(){
-    // setFilters([]);
-    loadProducts();
-    loadDefaultFilters();
+    setCheckedFilters({});
+
   }
 
   function handleFiltersChange(group, el, ChValue){
-    
     filters[group][el] = ChValue;
-    
-
-    // setFilters(prev => {
-
-    //   filters.group[el] = ChValue;
-    //   return filters;
-
-    // }); 
   }
 
 
-  // const test = {"fff" : {10:true , 20:false, 30:true}, "aaa" : {10:false , 20:true, }};
-  
-  // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa");
-  // console.log(test);
-  // console.log(test.fff[10]);
+  useEffect(() =>{
+    if(id)
+      loadProducts();
 
-  // test.filter()
-
-  console.log("ccccccccccccccccccccccc");
-
-  console.log(products);
-
-  // function test(){ 
-  //   // setFilteredProducts([]);
-  //   setFilteredProducts([]);
-  //   setFilteredProducts([products[0], products[0]]);
-
-  //   // setFilteredProducts([...filteredProducts, products[1]]);
-  //   // filteredProducts.push(products[0]);
-
-  // } 
-  
+  },[checkedFilters])
+ 
   
   
   function filterProducts(){ 
     
     // setFilteredProducts([]);
 
-    const checkedFilters = {};
+    const checkedFiltersLocal = {};
     
   
  
@@ -199,50 +186,42 @@ export default function CategoryPage() {
     
       for (const [key, value] of Object.entries(values)) {
         if(value) {
-          if(typeof checkedFilters[name] === 'undefined' ){
-            checkedFilters[name] = [];
+          if(typeof checkedFiltersLocal[name] === 'undefined' ){
+            checkedFiltersLocal[name] = [];
           }
-          checkedFilters[name].push(key);  
+          checkedFiltersLocal[name].push(key);  
         }
       }
     } 
 
+    setPage(1);
+ 
+    setCheckedFilters(checkedFiltersLocal);
+ 
     
- 
- 
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
 
-    console.log(checkedFilters);
-    console.log(filters);
- 
- 
+    // var flag = true;
+    // const tempProducts = [];
 
-    var flag = true;
-    const tempProducts = [];
+    // for (let i = 0; i < products.length; i++) {
+    //   flag = true;
+    //   for (const [key, value] of Object.entries(products[i].properties)) {
+    //     if(typeof checkedFilters[key] !== 'undefined' && !checkedFilters[key].includes(value)){
+    //       flag = false;
+    //     } 
+    //   }
+    //   if(flag){
+    //     tempProducts.push(products[i]);
+    //     // setFilteredProducts([...filteredProducts, products[i]]);
+    //   }
+    // } 
 
-    for (let i = 0; i < products.length; i++) {
-      flag = true;
-      for (const [key, value] of Object.entries(products[i].properties)) {
-        if(typeof checkedFilters[key] !== 'undefined' && !checkedFilters[key].includes(value)){
-          flag = false;
-        } 
-      }
-      if(flag){
-        tempProducts.push(products[i]);
-        // setFilteredProducts([...filteredProducts, products[i]]);
-      }
-    } 
-
-    setFilteredProducts([...tempProducts]);
+    // setFilteredProducts([...tempProducts]);
 
      
   }
 
-  // const test = {"fff" : [1,2,3], "aaa" : [1,2,3,4,5]};
   
-  // console.log("aaaaaaaaaaaaaaaaaaaaaaaaaa");
-  // console.log(test);
-  // console.log(test.fff[0]);
 
 
   return (
@@ -252,9 +231,7 @@ export default function CategoryPage() {
           <SelectWrapper>
             <Title>Категории</Title>
 
-            {/* {console.log("ffffffffffffffffff")}
-            {console.log(category.properties)}
-            
+            {/* 
 
             {
             
@@ -294,7 +271,7 @@ export default function CategoryPage() {
                 </Button>
               </WrapButton>
 
-            {console.log(filters)}  
+         
               
               {
                 typeof filters !== 'undefined' && Object.entries(filters).map(([name, values]) => (
@@ -359,6 +336,10 @@ export default function CategoryPage() {
 
             <ProductsGrid $countcolumns="3" products={filteredProducts}/>
           </DivideWrap>
+
+          <PaginationWrapper>
+            <Pagination count={countProduct} page={page} onChange={handleChangePage} />
+          </PaginationWrapper>
 
         </Center>
       </Layout>

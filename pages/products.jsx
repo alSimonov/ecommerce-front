@@ -9,6 +9,7 @@ import { Product } from "@/models/Product";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import Pagination from '@mui/material/Pagination';
 
 
 const StyledSelect = styled.select`
@@ -25,6 +26,13 @@ const StyledSelect = styled.select`
 const SortRow = styled.div`
   display: flex;
 `;
+const PaginationWrapper = styled.div`
+  
+  display: flex;
+  margin-top: 30px;  
+  justify-content: center;
+  
+`;
 
 
 export default function ProductsPage(){
@@ -34,6 +42,18 @@ export default function ProductsPage(){
   const [title, setSearchTitle] = useState("");
   const [selectedSort, setSelectedSort] = useState("title");
   const [selectedSortVect, setSelectedSortVect] = useState("-1");
+
+  const [page, setPage] = useState(1);
+  const [countProduct, setCountProduct] = useState(10);
+
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  },[page])
+
 
   useEffect(() => {
     fetchProducts();
@@ -52,10 +72,15 @@ export default function ProductsPage(){
   //   sorteredProductsFunc();
   // },[selectedSort])
   
-  function fetchProducts(){
-    axios.get('/api/products?title='+title+'&sort='+selectedSort+'&sortVect='+selectedSortVect).then(response => {
+  async function fetchProducts(){
+    await axios.get('/api/products?title='+title+'&sort='+selectedSort+'&sortVect='+selectedSortVect+'&page='+page).then(response => {
       setProducts(response.data);
 		});
+    
+    await axios.get('/api/products?count='+1).then(response => {
+      setCountProduct(response.data );
+		});
+
   }
 
   function sorteredProductsFunc(){
@@ -90,6 +115,11 @@ export default function ProductsPage(){
             </StyledSelect>
           </SortRow>
           <ProductsGrid $countcolumns="4" products={products}/>
+
+          <PaginationWrapper>
+            <Pagination count={countProduct} page={page} onChange={handleChangePage} />
+          </PaginationWrapper>
+
         </Center>
       </Layout>
     </>
