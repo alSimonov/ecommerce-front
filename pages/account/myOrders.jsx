@@ -10,6 +10,7 @@ import { withSwal } from 'react-sweetalert2';
 import IconInfo from "@/components/icons/IconInfo";
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import  { styled as styledMui}  from '@mui/material/styles';
+import Pagination from '@mui/material/Pagination';
 
 
 const InputWrapper = styled.div`
@@ -70,6 +71,13 @@ const SortRow = styled.div`
 const IconInfoWrapper = styled.div`
   width: 2.3em;
 `;
+const PaginationWrapper = styled.div`
+  
+  display: flex;
+  margin-top: 30px;  
+  justify-content: center;
+  
+`;
 
 
 
@@ -106,8 +114,18 @@ export default function MyOrders(){
   const [selectedSort, setSelectedSort] = useState("date");
   const [selectedSortVect, setSelectedSortVect] = useState("-1");
 
+  const [page, setPage] = useState(1);
+  const [countProduct, setCountProduct] = useState(10);
 
+  const handleChangePage = (event, value) => {
+    setPage(value);
+  };
  
+  useEffect(() => {
+    fetchOrders();
+  },[page])
+
+
   useEffect(() => {
     fetchOrders();
   },[selectedSort])
@@ -116,8 +134,6 @@ export default function MyOrders(){
     fetchOrders();
   },[selectedSortVect])
 
-
-
   useEffect(() => {
     fetchOrders();
 
@@ -125,8 +141,12 @@ export default function MyOrders(){
 
 
   function fetchOrders(){
-    axios.get('/api/orders?email='+accountObj.email+'&sort='+selectedSort+'&sortVect='+selectedSortVect).then(response => {
+    axios.get('/api/orders?email='+accountObj.email+'&sort='+selectedSort+'&sortVect='+selectedSortVect+'&page='+page).then(response => {
       setOrders(response.data);
+    });
+
+    axios.get('/api/orders?email='+accountObj.email+'&count='+1).then(response => {
+      setCountProduct(response.data);
     });
   }
 
@@ -148,9 +168,9 @@ export default function MyOrders(){
               value={selectedSort}
               onChange={ev => setSelectedSort(ev.target.value)}
             >
-              <option value="date">дате</option>
+              <option value="createdAt">дате</option>
               <option value="paid">оплате</option>
-              <option value="clientInfo">заказчику</option>
+              <option value="name">заказчику</option>
               <option value="statusOrder">статусу</option>
             </StyledSelect>
             <StyledSelect 
@@ -230,7 +250,9 @@ export default function MyOrders(){
 
 
         
-
+          <PaginationWrapper>
+            <Pagination count={countProduct} page={page} onChange={handleChangePage} />
+          </PaginationWrapper>
 
       
 

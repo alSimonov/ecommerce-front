@@ -75,11 +75,14 @@ export default async function handle(req, res) {
       
             let sortSel =  "";
             
-            if(req.query?.sort === "price")
-                sortSel =  {sort: { "price" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
+            sortSel =  {sort: { [req.query?.sort] : req.query?.sortVect}, skip: skipNum, limit: limitNum};
+
+
+            // if(req.query?.sort === "price")
+            //     sortSel =  {sort: { "price" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
             
-            else if (req.query?.sort === "title")
-                sortSel =  {sort: { "title" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
+            // else if (req.query?.sort === "title")
+            //     sortSel =  {sort: { "title" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
              
             
             const queryDB = { $and: [ {active: true}, { "title": { "$regex": req.query?.title, "$options": "i" } } ]};
@@ -92,12 +95,14 @@ export default async function handle(req, res) {
          
            
             let sortSel =  "";
+            sortSel =  {sort: { [req.query?.sort] : req.query?.sortVect}, skip: skipNum, limit: limitNum};
 
-            if(req.query?.sort === "price")
-                sortSel =  {sort: { "price" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
+
+            // if(req.query?.sort === "price")
+            //     sortSel =  {sort: { "price" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
             
-            else 
-                sortSel =  {sort: { "title" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
+            // else 
+            //     sortSel =  {sort: { "title" : req.query?.sortVect}, skip: skipNum, limit: limitNum};
              
 
             const queryDB = {active: true};
